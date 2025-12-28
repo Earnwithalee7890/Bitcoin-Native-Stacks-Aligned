@@ -293,9 +293,10 @@ export function Dashboard() {
             </section>
 
             {/* Footer */}
-            <footer className="text-center text-gray-500 text-sm py-12 border-t border-white/5">
+            <footer className="text-center text-gray-400 text-sm py-12 border-t border-white/5 space-y-2">
                 <p>© 2025 Bitcoin-Native & Stacks-Aligned. Built for the Stacks Builder Challenge #3.</p>
-                <div className="flex justify-center gap-4 mt-4">
+                <p className="text-[#5546FF] font-medium">Developed by aleekhoso</p>
+                <div className="flex justify-center gap-4 mt-4 opacity-60">
                     <span className="bg-white/5 px-2 py-1 rounded text-[10px]">Clarity 4</span>
                     <span className="bg-white/5 px-2 py-1 rounded text-[10px]">Hiro SDK</span>
                     <span className="bg-white/5 px-2 py-1 rounded text-[10px]">Reown AppKit</span>
