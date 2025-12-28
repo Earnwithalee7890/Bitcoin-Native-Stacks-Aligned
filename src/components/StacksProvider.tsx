@@ -14,13 +14,10 @@ interface StacksContextType {
 
 const StacksContext = createContext<StacksContextType | undefined>(undefined);
 
-// Reown Project ID from user
-// Use environment variable for Reown Project ID
 const projectId = process.env.NEXT_PUBLIC_PROJECT_ID || 'a6ae799d0ee3f5904f558fce28f0abf5';
 
 export function StacksProvider({ children }: { children: ReactNode }) {
   const [userData, setUserData] = useState<any>(null);
-  const [isMounted, setIsMounted] = useState(false);
   const [isInitializing, setIsInitializing] = useState(true);
 
   const userSession = useMemo(() => {
@@ -29,14 +26,11 @@ export function StacksProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    setIsMounted(true);
-
     // Initialize Reown AppKit for the challenge requirement
     const initAppKit = async () => {
       try {
         const { createAppKit } = await import("@reown/appkit");
 
-        // This initialization ensures the project tracks Reown AppKit usage
         createAppKit({
           projectId,
           networks: [{
@@ -78,8 +72,6 @@ export function StacksProvider({ children }: { children: ReactNode }) {
   }, [userSession]);
 
   const connectWallet = () => {
-    // For reliable Stacks wallet popups (Leather/Xverse), we use the official showConnect.
-    // This works alongside the AppKit initialization above to satisfy all requirements.
     showConnect({
       appDetails: {
         name: 'Bitcoin-Native & Stacks-Aligned',
@@ -89,7 +81,7 @@ export function StacksProvider({ children }: { children: ReactNode }) {
       onFinish: () => {
         const data = userSession.loadUserData();
         setUserData(data);
-        window.location.reload(); // Force reload to sync state
+        window.location.reload();
       },
       onCancel: () => {
         console.log("User cancelled login");
@@ -103,8 +95,8 @@ export function StacksProvider({ children }: { children: ReactNode }) {
     window.location.reload();
   };
 
-  if (!isMounted) return null;
-
+  // We ALWAYS return the provider to prevent children from crashing on hydration.
+  // The 'isInitializing' state handles the UI loading states.
   return (
     <StacksContext.Provider
       value={{
