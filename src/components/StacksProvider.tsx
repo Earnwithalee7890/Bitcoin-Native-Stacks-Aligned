@@ -103,6 +103,8 @@ export function StacksProvider({ children }: { children: ReactNode }) {
     window.location.reload();
   };
 
+  if (!isMounted) return null;
+
   return (
     <StacksContext.Provider
       value={{
@@ -114,7 +116,7 @@ export function StacksProvider({ children }: { children: ReactNode }) {
         isInitializing
       }}
     >
-      {isMounted ? children : <div className="min-h-screen bg-black" />}
+      {children}
     </StacksContext.Provider>
   );
 }
