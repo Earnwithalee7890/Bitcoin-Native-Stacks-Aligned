@@ -2,6 +2,8 @@
 
 Built for the **Stacks Builder Challenge #3**, this project is a premium dashboard designed to showcase the power of Bitcoin L2 (Stacks) and global builder tracking.
 
+**Live Demo**: [bitcoin-native-stacks-aligned.vercel.app](https://bitcoin-native-stacks-aligned.vercel.app)
+
 ## 🌟 Overview
 
 **Bitcoin-Native & Stacks-Aligned** is a modern Web3 application that integrates the latest Stacks ecosystem standards. It allows users to perform daily "Check-Ins" on the Stacks mainnet, contributing to their global reputation while interacting with custom Clarity smart contracts.

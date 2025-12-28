@@ -26,8 +26,6 @@ export function Dashboard() {
         showSuccess
     } = useStacks();
 
-    const [isGitHubConnected, setIsGitHubConnected] = useState(false);
-
     return (
         <main className="min-h-screen p-4 md:p-8 max-w-7xl mx-auto">
             {/* Header */}
@@ -111,10 +109,11 @@ export function Dashboard() {
             </section>
 
             {/* Main Actions */}
-            <div className="grid md:grid-cols-2 gap-8 mb-16">
+            <div className="flex justify-center mb-16">
+                {/* Check In Action */}
                 <motion.div
                     whileHover={{ scale: 1.02 }}
-                    className="glass-card p-10 flex flex-col items-center justify-center text-center relative overflow-hidden group"
+                    className="glass-card p-10 max-w-xl w-full flex flex-col items-center justify-center text-center relative overflow-hidden group"
                 >
                     <div className="absolute top-0 right-0 p-4 opacity-20 group-hover:opacity-100 transition-opacity">
                         <CheckCircle2 className="w-12 h-12 text-[#5546FF]" />
@@ -155,37 +154,30 @@ export function Dashboard() {
 
                     {!isConnected && <p className="mt-4 text-xs text-[#5546FF] animate-pulse">Connect wallet to unlock</p>}
                 </motion.div>
-
-                <motion.div
-                    whileHover={{ scale: 1.02 }}
-                    className="glass-card p-10 flex flex-col items-center justify-center text-center relative overflow-hidden group"
-                >
-                    <div className="absolute top-0 right-0 p-4 opacity-20 group-hover:opacity-100 transition-opacity">
-                        <Github className="w-12 h-12 text-white" />
-                    </div>
-                    <h2 className="text-3xl font-bold mb-4">GitHub Profile</h2>
-                    <p className="text-gray-400 mb-8">
-                        Connect your GitHub account to track contributions to public Stacks repositories.
-                    </p>
-                    <button
-                        onClick={() => setIsGitHubConnected(true)}
-                        disabled={isGitHubConnected}
-                        className={`w-full max-w-xs py-4 rounded-2xl font-bold text-lg flex items-center justify-center gap-3 transition-all ${isGitHubConnected ? 'bg-green-500/10 text-green-500 border border-green-500/20' : 'bg-white text-black hover:bg-gray-200'}`}
-                    >
-                        {isGitHubConnected ? (
-                            <>
-                                <CheckCircle2 className="w-5 h-5" />
-                                Connected
-                            </>
-                        ) : (
-                            <>
-                                <Github className="w-5 h-5" />
-                                Connect GitHub
-                            </>
-                        )}
-                    </button>
-                </motion.div>
             </div>
+
+            {/* Follow the Developer */}
+            <section className="mb-16 text-center">
+                <h2 className="text-2xl font-bold mb-6">Follow the Developer</h2>
+                <div className="flex flex-wrap justify-center gap-4">
+                    <a href="https://github.com/Earnwithalee7890" target="_blank" rel="noopener noreferrer" className="glass-card px-6 py-3 flex items-center gap-2 hover:bg-white/10 transition-colors">
+                        <Github className="w-5 h-5 text-white" />
+                        <span>GitHub</span>
+                    </a>
+                    <a href="https://x.com/aleeasghar78" target="_blank" rel="noopener noreferrer" className="glass-card px-6 py-3 flex items-center gap-2 hover:bg-white/10 transition-colors">
+                        <svg viewBox="0 0 24 24" className="w-5 h-5 fill-current text-white"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
+                        <span>Twitter</span>
+                    </a>
+                    <a href="https://farcaster.xyz/aleekhoso" target="_blank" rel="noopener noreferrer" className="glass-card px-6 py-3 flex items-center gap-2 hover:bg-white/10 transition-colors">
+                        <Users className="w-5 h-5 text-white" />
+                        <span>Farcaster</span>
+                    </a>
+                    <a href="https://talent.app/aleekhoso" target="_blank" rel="noopener noreferrer" className="glass-card px-6 py-3 flex items-center gap-2 hover:bg-white/10 transition-colors">
+                        <ExternalLink className="w-5 h-5 text-white" />
+                        <span>Talent Protocol</span>
+                    </a>
+                </div>
+            </section>
 
             {/* Leaderboard Section */}
             <section className="glass-card p-8 mb-16">
