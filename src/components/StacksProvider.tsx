@@ -15,7 +15,8 @@ interface StacksContextType {
 const StacksContext = createContext<StacksContextType | undefined>(undefined);
 
 // Reown Project ID from user
-const projectId = 'a6ae799d0ee3f5904f558fce28f0abf5';
+// Use environment variable for Reown Project ID
+const projectId = process.env.NEXT_PUBLIC_PROJECT_ID || 'a6ae799d0ee3f5904f558fce28f0abf5';
 
 export function StacksProvider({ children }: { children: ReactNode }) {
   const [userData, setUserData] = useState<any>(null);
