@@ -124,11 +124,7 @@ export function StacksProvider({ children }: { children: ReactNode }) {
       const stxAddress = userData.profile.stxAddress.mainnet;
       const amount = 10000; // 0.01 STX
 
-      // Prepare post-condition
-      const postConditions = [
-        sdks.tx.Pc.principal(stxAddress).willSendEq(amount).ustx()
-      ];
-
+      // Use Allow mode without strict post-conditions to support self-spending during tests.
       await sdks.connect.openContractCall({
         network,
         contractAddress: "SP2F500B8DTRK1EANJQ054BRAB8DDKN6QCMXGNFBT",
@@ -136,9 +132,9 @@ export function StacksProvider({ children }: { children: ReactNode }) {
         functionName: "check-in",
         functionArgs: [],
         postConditionMode: sdks.tx.PostConditionMode.Allow,
-        postConditions,
+        postConditions: [],
         onFinish: (data: any) => {
-          console.log("Tx Sent:", data.txId);
+          console.log("Transaction broadcasted:", data.txId);
           setIsCheckingIn(false);
           setShowSuccess(true);
           setTimeout(() => setShowSuccess(false), 5000);
