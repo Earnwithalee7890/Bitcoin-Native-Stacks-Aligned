@@ -23,11 +23,14 @@
         ;; 1. Transfer 0.01 STX fee from user to platform
         (try! (stx-transfer? CHECK-IN-FEE caller recipient))
         
-        ;; 2. Transfer 0.001 STX reward from contract to user (requires contract to have funds)
-        ;; Note: The contract must be funded to pay out rewards.
-        (try! (as-contract (stx-transfer? USER-REWARD (as-contract tx-sender) caller)))
+        ;; 2. Attempt to transfer 0.001 STX reward from contract to user
+        ;; Use match to prevent rollback if reward pool is empty
+        (match (as-contract (stx-transfer? USER-REWARD (as-contract tx-sender) caller))
+            success (print "Reward sent")
+            failure (print "Reward pool empty or failed")
+        )
         
-        ;; 3. Update user stats using Clarity 4 stacks-block-height
+        ;; 3. Update user stats
         (map-set user-check-ins caller {
             count: (+ (get count current-stats) u1),
             last-check-in: stacks-block-height

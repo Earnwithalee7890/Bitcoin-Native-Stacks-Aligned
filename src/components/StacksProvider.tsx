@@ -135,7 +135,7 @@ export function StacksProvider({ children }: { children: ReactNode }) {
         contractName: "check-in",
         functionName: "check-in",
         functionArgs: [],
-        postConditionMode: sdks.tx.PostConditionMode.Deny,
+        postConditionMode: sdks.tx.PostConditionMode.Allow,
         postConditions,
         onFinish: (data: any) => {
           console.log("Tx Sent:", data.txId);
