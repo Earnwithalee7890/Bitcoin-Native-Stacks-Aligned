@@ -176,8 +176,8 @@ export function Dashboard() {
                         </div>
                         <h2 className="text-4xl font-bold mb-4">Daily Check-In</h2>
                         <p className="text-gray-400 mb-8 max-w-md">
-                            Boost your ecosystem rank and claim your rebate.
-                            0.01 STX Fee | 0.001 STX Reward.
+                            Boost your ecosystem rank and verify your Stacks activity.
+                            0.01 STX Fee required.
                         </p>
                         <button
                             onClick={doCheckIn}
