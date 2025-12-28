@@ -2,9 +2,6 @@
 
 import { useStacks } from "@/components/StacksProvider";
 import { useState } from "react";
-import { openContractCall } from "@stacks/connect";
-import { STACKS_MAINNET } from "@stacks/network";
-import { PostConditionMode, Pc } from "@stacks/transactions";
 import {
     Rocket,
     Github,
@@ -18,50 +15,18 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 
 export function Dashboard() {
-    const { connectWallet, isConnected, userData, disconnectWallet, isInitializing } = useStacks();
-    const [isCheckingIn, setIsCheckingIn] = useState(false);
+    const {
+        connectWallet,
+        isConnected,
+        userData,
+        disconnectWallet,
+        isInitializing,
+        doCheckIn,
+        isCheckingIn,
+        showSuccess
+    } = useStacks();
+
     const [isGitHubConnected, setIsGitHubConnected] = useState(false);
-
-    const CONTRACT_ADDRESS = "SP2F500B8DTRK1EANJQ054BRAB8DDKN6QCMXGNFBT";
-    const CONTRACT_NAME = "check-in";
-    const [showSuccess, setShowSuccess] = useState(false);
-
-    const handleCheckIn = async () => {
-        if (!isConnected) return;
-        setIsCheckingIn(true);
-        setShowSuccess(false);
-
-        try {
-            const network = STACKS_MAINNET;
-            const postConditionAddress = userData.profile.stxAddress.mainnet;
-            const amount = 10000;
-            const postConditions = [
-                Pc.principal(postConditionAddress).willSendEq(amount).ustx()
-            ];
-
-            await openContractCall({
-                network,
-                contractAddress: CONTRACT_ADDRESS,
-                contractName: CONTRACT_NAME,
-                functionName: "check-in",
-                functionArgs: [],
-                postConditionMode: PostConditionMode.Deny,
-                postConditions,
-                onFinish: (data: any) => {
-                    console.log("Transaction ID:", data.txId);
-                    setIsCheckingIn(false);
-                    setShowSuccess(true);
-                    setTimeout(() => setShowSuccess(false), 5000);
-                },
-                onCancel: () => {
-                    setIsCheckingIn(false);
-                },
-            });
-        } catch (error) {
-            console.error("Check-in failed:", error);
-            setIsCheckingIn(false);
-        }
-    };
 
     return (
         <main className="min-h-screen p-4 md:p-8 max-w-7xl mx-auto">
@@ -97,7 +62,7 @@ export function Dashboard() {
                         <div className="flex items-center gap-3">
                             <div className="text-right hidden sm:block">
                                 <p className="text-xs text-gray-400">Connected</p>
-                                <p className="text-sm font-mono">{userData.profile.stxAddress.mainnet.slice(0, 6)}...{userData.profile.stxAddress.mainnet.slice(-4)}</p>
+                                <p className="text-sm font-mono">{userData?.profile?.stxAddress?.mainnet?.slice(0, 6)}...{userData?.profile?.stxAddress?.mainnet?.slice(-4)}</p>
                             </div>
                             <button
                                 onClick={disconnectWallet}
@@ -160,7 +125,7 @@ export function Dashboard() {
                         Fee: 0.01 STX | Reward: 0.001 STX rebate.
                     </p>
                     <button
-                        onClick={handleCheckIn}
+                        onClick={doCheckIn}
                         disabled={!isConnected || isCheckingIn}
                         className={`glass-button w-full max-w-xs py-4 rounded-2xl font-bold text-lg flex items-center justify-center gap-3 ${!isConnected ? 'opacity-50 cursor-not-allowed grayscale' : ''}`}
                     >
