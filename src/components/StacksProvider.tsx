@@ -132,7 +132,7 @@ export function StacksProvider({ children }: { children: ReactNode }) {
       await sdks.connect.openContractCall({
         network,
         contractAddress: "SP2F500B8DTRK1EANJQ054BRAB8DDKN6QCMXGNFBT",
-        contractName: "check-in",
+        contractName: "check-in2",
         functionName: "check-in",
         functionArgs: [],
         postConditionMode: sdks.tx.PostConditionMode.Allow,

@@ -177,7 +177,7 @@ export function Dashboard() {
                         <h2 className="text-4xl font-bold mb-4">Daily Check-In</h2>
                         <p className="text-gray-400 mb-8 max-w-md">
                             Boost your ecosystem rank and verify your Stacks activity.
-                            0.01 STX Fee required.
+                            0.01 STX Fee required | Once every 24 hours.
                         </p>
                         <button
                             onClick={doCheckIn}
