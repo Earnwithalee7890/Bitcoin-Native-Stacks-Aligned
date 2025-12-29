@@ -51,7 +51,8 @@ import {
     BuilderJourney,
     SummaryCard,
     Leaderboard,
-    TransactionHistory
+    TransactionHistory,
+    PortfolioWidget
 } from "./dashboard_modules";
 
 export function Dashboard() {
@@ -321,7 +322,7 @@ export function Dashboard() {
 
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                             <motion.div variants={itemVariants} className="lg:col-span-1">
-                                <SummaryCard marketData={marketData} variants={itemVariants} />
+                                <PortfolioWidget variants={itemVariants} />
                             </motion.div>
 
                             <ActivityFeed
