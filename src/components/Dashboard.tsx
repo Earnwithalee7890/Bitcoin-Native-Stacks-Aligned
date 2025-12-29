@@ -50,7 +50,8 @@ import {
     EcosystemHub,
     BuilderJourney,
     SummaryCard,
-    Leaderboard
+    Leaderboard,
+    TransactionHistory
 } from "./dashboard_modules";
 
 export function Dashboard() {
@@ -575,6 +576,10 @@ export function Dashboard() {
                                 ))}
                             </div>
                         </motion.section>
+
+                        {/* Transaction History */}
+                        <TransactionHistory variants={itemVariants} />
+
                         <SecurityModule variants={itemVariants} />
                     </motion.div>
                 )}

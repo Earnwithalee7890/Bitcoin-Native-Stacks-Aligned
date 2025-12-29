@@ -8,3 +8,4 @@ export * from "./BuilderJourney";
 export * from "./SummaryCard";
 export * from "./StatsGrid";
 export * from "./Leaderboard";
+export * from "./TransactionHistory";
