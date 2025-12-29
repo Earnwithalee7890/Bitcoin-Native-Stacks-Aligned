@@ -49,7 +49,8 @@ import {
     SecurityModule,
     EcosystemHub,
     BuilderJourney,
-    SummaryCard
+    SummaryCard,
+    Leaderboard
 } from "./dashboard_modules";
 
 export function Dashboard() {
@@ -394,6 +395,9 @@ export function Dashboard() {
                                 ))}
                             </div>
                         </motion.section>
+
+                        {/* Global Leaderboard */}
+                        <Leaderboard variants={itemVariants} />
 
                         {/* Multi-feature Roadmap Section */}
                         <motion.section variants={itemVariants} className="glass-card p-12 bg-gradient-to-br from-black to-[#5546FF]/5 border border-white/5 text-center">
