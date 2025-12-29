@@ -37,6 +37,8 @@ import {
     Fingerprint
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { STACKS_CONTRACT_ADDRESS, CONTRACT_NAME, HIRO_API_BASE, COINGECKO_API_BASE } from "@/config/constants";
+import { MarketData, ActivityItem, UserStats, NetworkStats, SearchResult } from "@/types/dashboard";
 
 export function Dashboard() {
     const {
@@ -51,18 +53,15 @@ export function Dashboard() {
     } = useStacks();
 
     // Market & Network State
-    const [marketData, setMarketData] = useState<{ price: number; change: number } | null>(null);
+    const [marketData, setMarketData] = useState<MarketData | null>(null);
     const [blockHeight, setBlockHeight] = useState<number | null>(null);
     const [activeTab, setActiveTab] = useState("overview");
-    const [activity, setActivity] = useState<any[]>([]);
+    const [activity, setActivity] = useState<ActivityItem[]>([]);
     const [isLoadingActivity, setIsLoadingActivity] = useState(false);
-    const [userStats, setUserStats] = useState<{ count: number; last_active: string } | null>(null);
-    const [networkStats, setNetworkStats] = useState<{ tps: number; volume_24h: string } | null>(null);
+    const [userStats, setUserStats] = useState<UserStats | null>(null);
+    const [networkStats, setNetworkStats] = useState<NetworkStats | null>(null);
     const [searchQuery, setSearchQuery] = useState("");
-    const [searchResult, setSearchResult] = useState<{ address: string; score: number } | null>(null);
-
-    const CONTRACT_ADDRESS = "SP2F500B8DTRK1EANJQ054BRAB8DDKN6QCMXGNFBT";
-    const CONTRACT_NAME = "check-in";
+    const [searchResult, setSearchResult] = useState<SearchResult | null>(null);
 
     useEffect(() => {
         const fetchStats = async () => {
@@ -87,7 +86,7 @@ export function Dashboard() {
         const fetchActivity = async () => {
             setIsLoadingActivity(true);
             try {
-                const res = await fetch(`https://api.mainnet.hiro.so/extended/v1/address/${CONTRACT_ADDRESS}/transactions?limit=10`);
+                const res = await fetch(`${HIRO_API_BASE}/extended/v1/address/${STACKS_CONTRACT_ADDRESS}/transactions?limit=10`);
                 const data = await res.json();
 
                 const formatted = data.results.map((tx: any) => ({
@@ -121,7 +120,7 @@ export function Dashboard() {
         const fetchNetworkStats = async () => {
             try {
                 // Fetch basic network info from Hiro API
-                const res = await fetch("https://api.mainnet.hiro.so/v2/info");
+                const res = await fetch(`${HIRO_API_BASE}/v2/info`);
                 const data = await res.json();
                 // Simple calculation for demonstration - real TPS would be averaged over blocks
                 setNetworkStats({
