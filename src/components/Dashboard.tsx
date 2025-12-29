@@ -31,7 +31,8 @@ import {
     Flame,
     LineChart,
     Layers,
-    Lock
+    Lock,
+    History
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -539,6 +540,31 @@ export function Dashboard() {
                                 </button>
                             </motion.div>
                         </div>
+
+                        {/* Builder Journey (NEW) */}
+                        <motion.section variants={itemVariants} className="px-4">
+                            <h3 className="text-2xl font-black mb-8 px-4 border-l-4 border-[#5546FF]">The Builder Journey</h3>
+                            <div className="glass-card p-10 border border-[#5546FF]/30 bg-gradient-to-br from-[#5546FF]/5 to-transparent flex flex-col md:flex-row items-center gap-8 group">
+                                <div className="w-24 h-24 bg-[#5546FF]/10 rounded-3xl flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-500">
+                                    <History className="w-12 h-12 text-[#5546FF]" />
+                                </div>
+                                <div className="flex-grow">
+                                    <div className="flex items-center gap-3 mb-2">
+                                        <span className="bg-[#5546FF]/20 text-[#5546FF] text-[10px] font-black px-2 py-1 rounded-md uppercase tracking-widest">Phase 1 & 2</span>
+                                        <h4 className="text-3xl font-black tracking-tight">Legacy Evolution</h4>
+                                    </div>
+                                    <p className="text-gray-400 font-medium leading-relaxed mb-8 max-w-2xl">
+                                        Witness the foundation of this protocol. My Week 1 & 2 prototypes established the core check-in logic and early UI experiments that paved the way for this high-fidelity Week 3 experience.
+                                    </p>
+                                    <button
+                                        onClick={() => window.open("https://stx-daily-check-in.vercel.app/", "_blank")}
+                                        className="glass-button px-10 py-4 rounded-2xl font-black uppercase tracking-widest text-sm flex items-center gap-3 active:scale-95 transition-all shadow-xl shadow-[#5546FF]/20"
+                                    >
+                                        <ExternalLink className="w-5 h-5" /> Explore Previous Work
+                                    </button>
+                                </div>
+                            </div>
+                        </motion.section>
 
                         {/* Builder Milestones (NEW) */}
                         <motion.section variants={itemVariants} className="px-4">
