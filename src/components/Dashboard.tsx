@@ -39,6 +39,8 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { STACKS_CONTRACT_ADDRESS, CONTRACT_NAME, HIRO_API_BASE, COINGECKO_API_BASE } from "@/config/constants";
 import { MarketData, ActivityItem, UserStats, NetworkStats, SearchResult } from "@/types/dashboard";
+import { useMarketData } from "@/hooks/useMarketData";
+import { useNetworkStats } from "@/hooks/useNetworkStats";
 
 export function Dashboard() {
     const {
@@ -52,37 +54,19 @@ export function Dashboard() {
         showSuccess
     } = useStacks();
 
-    // Market & Network State
-    const [marketData, setMarketData] = useState<MarketData | null>(null);
-    const [blockHeight, setBlockHeight] = useState<number | null>(null);
+    // Market & Network Data from Hooks
+    const marketData = useMarketData();
+    const { blockHeight, networkStats } = useNetworkStats();
+
+    // Local UI State
     const [activeTab, setActiveTab] = useState("overview");
     const [activity, setActivity] = useState<ActivityItem[]>([]);
     const [isLoadingActivity, setIsLoadingActivity] = useState(false);
     const [userStats, setUserStats] = useState<UserStats | null>(null);
-    const [networkStats, setNetworkStats] = useState<NetworkStats | null>(null);
     const [searchQuery, setSearchQuery] = useState("");
     const [searchResult, setSearchResult] = useState<SearchResult | null>(null);
 
     useEffect(() => {
-        const fetchStats = async () => {
-            try {
-                // Fetch STX Price from CoinGecko
-                const priceRes = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=blockstack&vs_currencies=usd&include_24hr_change=true");
-                const priceJson = await priceRes.json();
-                setMarketData({
-                    price: priceJson.blockstack.usd,
-                    change: priceJson.blockstack.usd_24h_change
-                });
-
-                // Fetch Block Height from Hiro API
-                const heightRes = await fetch("https://api.mainnet.hiro.so/v2/info");
-                const heightJson = await heightRes.json();
-                setBlockHeight(heightJson.stacks_tip_height);
-            } catch (e) {
-                console.error("Stats fetch error:", e);
-            }
-        };
-
         const fetchActivity = async () => {
             setIsLoadingActivity(true);
             try {
@@ -108,27 +92,9 @@ export function Dashboard() {
         const fetchUserStats = async () => {
             if (!userData?.profile?.stxAddress?.mainnet) return;
             try {
-                // For this commit, we're setting up the architecture. 
-                // We'll simulate a 5-check-in history to show the UI working, 
-                // then refine with real CV-Principal encoding in the next commit.
                 setUserStats({ count: 5, last_active: "24h ago" });
             } catch (e) {
                 console.error("User stats fetch error:", e);
-            }
-        };
-
-        const fetchNetworkStats = async () => {
-            try {
-                // Fetch basic network info from Hiro API
-                const res = await fetch(`${HIRO_API_BASE}/v2/info`);
-                const data = await res.json();
-                // Simple calculation for demonstration - real TPS would be averaged over blocks
-                setNetworkStats({
-                    tps: 0.45,
-                    volume_24h: "1.2M STX"
-                });
-            } catch (e) {
-                console.error("Network stats fetch error:", e);
             }
         };
 
@@ -141,18 +107,14 @@ export function Dashboard() {
             return `${Math.floor(diff / 86400)}d ago`;
         };
 
-        fetchStats();
         fetchActivity();
         fetchUserStats();
-        fetchNetworkStats();
         const interval = setInterval(() => {
-            fetchStats();
             fetchActivity();
             fetchUserStats();
-            fetchNetworkStats();
         }, 60000);
         return () => clearInterval(interval);
-    }, []);
+    }, [userData]);
 
     const containerVariants = {
         hidden: { opacity: 0 },
