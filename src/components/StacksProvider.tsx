@@ -125,10 +125,13 @@ export function StacksProvider({ children }: { children: ReactNode }) {
       const amount = 10000; // 0.01 STX
 
       // Use Allow mode without strict post-conditions to support self-spending during tests.
+      // Use constants for better reliability
+      const { STACKS_CONTRACT_ADDRESS, STACKS_CONTRACT_NAME } = await import("@/config/constants");
+
       await sdks.connect.openContractCall({
         network,
-        contractAddress: "SP2F500B8DTRK1EANJQ054BRAB8DDKN6QCMXGNFBT",
-        contractName: "check-in2",
+        contractAddress: STACKS_CONTRACT_ADDRESS,
+        contractName: STACKS_CONTRACT_NAME,
         functionName: "check-in",
         functionArgs: [],
         postConditionMode: sdks.tx.PostConditionMode.Allow,

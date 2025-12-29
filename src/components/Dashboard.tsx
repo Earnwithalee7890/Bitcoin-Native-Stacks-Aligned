@@ -170,7 +170,7 @@ export function Dashboard() {
                     </div>
                 </div>
 
-                <div className="hidden lg:flex items-center gap-8 text-sm font-black uppercase tracking-widest text-gray-500">
+                <div className="flex flex-wrap items-center gap-4 md:gap-8 text-[10px] md:text-sm font-black uppercase tracking-widest text-gray-500">
                     {["overview", "ecosystem", "builder"].map((tab) => (
                         <button
                             key={tab}
