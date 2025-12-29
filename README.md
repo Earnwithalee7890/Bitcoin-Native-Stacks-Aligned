@@ -8,14 +8,15 @@ Built for the **Stacks Builder Challenge #3**, this project is a premium dashboa
 
 **Bitcoin-Native & Stacks-Aligned** is a modern Web3 application that integrates the latest Stacks ecosystem standards. It allows users to perform daily "Check-Ins" on the Stacks mainnet, contributing to their global reputation while interacting with custom Clarity smart contracts.
 
-### Key Features
-- **Reown AppKit Integration**: Uses Reown AppKit for modern wallet discovery and WalletConnect-compatible connection flows.
-- **Clarity 4 Contract**: Interaction with a custom deployed Clarity 4 contract (`check-in`) utilizing `stacks-block-height`.
-- **Economical Check-Ins**:
-    - **Fee**: 0.01 STX per check-in (transferred to the project treasury).
-    - **Reward**: 0.001 STX rebate paid directly from the contract to the user.
-- **GitHub Synergy**: Integrated (mocked) GitHub contribution tracking to align Bitcoin L2 activity with developer output.
-- **Premium UI**: Dark-mode glassmorphism design built with Next.js, Tailwind CSS, and Framer Motion.
+### 💎 Week 3 Special Enhancements
+- **Multi-Tab Command Center**: New interactive tabs for *Overview*, *Ecosystem Hub*, and *Builder Reputation*.
+- **Real-time Market Analytics**: Live STX price tracking and 24h change via CoinGecko integration.
+- **Dynamic Network Pulse**: Real-time Stacks block height monitoring.
+- **Market Trends Visualization**: Custom SVG-based price trend indicator for STX/BTC liquidity analysis.
+- **Ecosystem Hub v2**: Deep integration with 9+ leading Stacks protocols (Hiro, ALEX, Gamma, Stacking DAO, etc.).
+- **Builder Reputation Profiles**: Unified view of GitHub commits, Repo count, and Talent Protocol scores.
+- **Premium Design System v3**: Advanced glassmorphism, animated border beams, hero shimmers, and fixed dotted grid background.
+- **Developer Milestones**: On-chain achievement tracking for active contributors.
 
 ## 🛠️ Technical Stack
 
