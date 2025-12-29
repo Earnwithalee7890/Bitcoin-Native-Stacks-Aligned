@@ -32,7 +32,9 @@ import {
     LineChart,
     Layers,
     Lock,
-    History
+    History,
+    Search,
+    Fingerprint
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -744,6 +746,39 @@ export function Dashboard() {
                                         </div>
                                     </div>
                                 ))}
+                            </div>
+                        </motion.section>
+                        {/* Clarity 4 Security Section (NEW) */}
+                        <motion.section variants={itemVariants} className="px-4">
+                            <h3 className="text-2xl font-black mb-8 px-4 border-l-4 border-green-500">Clarity 4 Security Model</h3>
+                            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                                <div className="glass-card p-10 bg-gradient-to-br from-green-500/5 to-transparent border border-green-500/10 hover:border-green-500/30 transition-all flex flex-col gap-6">
+                                    <div className="w-14 h-14 bg-green-500/20 rounded-2xl flex items-center justify-center text-green-500">
+                                        <Lock className="w-7 h-7" />
+                                    </div>
+                                    <h4 className="text-xl font-black">Nakamoto Ready</h4>
+                                    <p className="text-gray-400 text-sm font-medium leading-relaxed">
+                                        This protocol is built with Clarity 4, utilizing <span className="text-green-500 font-black">stacks-block-height</span> for precise 24-hour interval tracking, fully aligned with the Nakamoto upgrade.
+                                    </p>
+                                </div>
+                                <div className="glass-card p-10 bg-gradient-to-br from-[#5546FF]/5 to-transparent border border-white/5 hover:border-[#5546FF]/30 transition-all flex flex-col gap-6">
+                                    <div className="w-14 h-14 bg-[#5546FF]/20 rounded-2xl flex items-center justify-center text-[#5546FF]">
+                                        <Shield className="w-7 h-7" />
+                                    </div>
+                                    <h4 className="text-xl font-black">Deterministic Safety</h4>
+                                    <p className="text-gray-400 text-sm font-medium leading-relaxed">
+                                        Leveraging Clarity's interpreted nature to prevent re-entrancy attacks. Our <span className="text-[#5546FF] font-black">Post-condition</span> checks ensure your funds never leave your wallet without explicit consent.
+                                    </p>
+                                </div>
+                                <div className="glass-card p-10 bg-gradient-to-br from-[#3B82F6]/5 to-transparent border border-white/5 hover:border-[#3B82F6]/30 transition-all flex flex-col gap-6">
+                                    <div className="w-14 h-14 bg-[#3B82F6]/20 rounded-2xl flex items-center justify-center text-[#3B82F6]">
+                                        <Terminal className="w-7 h-7" />
+                                    </div>
+                                    <h4 className="text-xl font-black">On-Chain Transparency</h4>
+                                    <p className="text-gray-400 text-sm font-medium leading-relaxed">
+                                        No hidden compiler logic. Every line of the `check-in.clar` contract is readable directly on the explorer, ensuring 100% auditable builder reputation.
+                                    </p>
+                                </div>
                             </div>
                         </motion.section>
                     </motion.div>
