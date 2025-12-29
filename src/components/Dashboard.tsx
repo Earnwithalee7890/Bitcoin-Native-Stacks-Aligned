@@ -52,7 +52,8 @@ import {
     SummaryCard,
     Leaderboard,
     TransactionHistory,
-    PortfolioWidget
+    PortfolioWidget,
+    ContractAnalytics
 } from "./dashboard_modules";
 
 export function Dashboard() {
@@ -441,6 +442,9 @@ export function Dashboard() {
                         </motion.section>
 
                         <EcosystemHub variants={itemVariants} />
+
+                        {/* Contract Analytics */}
+                        <ContractAnalytics variants={itemVariants} />
                     </motion.div>
                 )}
 
