@@ -52,6 +52,11 @@ export function Dashboard() {
     const [marketData, setMarketData] = useState<{ price: number; change: number } | null>(null);
     const [blockHeight, setBlockHeight] = useState<number | null>(null);
     const [activeTab, setActiveTab] = useState("overview");
+    const [activity, setActivity] = useState<any[]>([]);
+    const [isLoadingActivity, setIsLoadingActivity] = useState(false);
+
+    const CONTRACT_ADDRESS = "SP2F500B8DTRK1EANJQ054BRAB8DDKN6QCMXGNFBT.check-in";
+    const ADDRESS_ONLY = "SP2F500B8DTRK1EANJQ054BRAB8DDKN6QCMXGNFBT";
 
     useEffect(() => {
         const fetchStats = async () => {
@@ -73,8 +78,43 @@ export function Dashboard() {
             }
         };
 
+        const fetchActivity = async () => {
+            setIsLoadingActivity(true);
+            try {
+                const res = await fetch(`https://api.mainnet.hiro.so/extended/v1/address/${ADDRESS_ONLY}/transactions?limit=10`);
+                const data = await res.json();
+
+                const formatted = data.results.map((tx: any) => ({
+                    user: `${tx.sender_address.slice(0, 4)}...${tx.sender_address.slice(-3)}`,
+                    fullAddress: tx.sender_address,
+                    action: tx.tx_type === "contract_call" ? "Check-in" : tx.tx_type.replace("_", " "),
+                    time: formatTime(tx.burn_block_time),
+                    icon: tx.tx_status === "success" ? CheckCircle2 : Activity,
+                    color: tx.tx_status === "success" ? "text-green-500" : "text-yellow-500"
+                }));
+                setActivity(formatted);
+            } catch (e) {
+                console.error("Activity fetch error:", e);
+            } finally {
+                setIsLoadingActivity(false);
+            }
+        };
+
+        const formatTime = (timestamp: number) => {
+            const now = Math.floor(Date.now() / 1000);
+            const diff = now - timestamp;
+            if (diff < 60) return `${diff}s ago`;
+            if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+            if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
+            return `${Math.floor(diff / 86400)}d ago`;
+        };
+
         fetchStats();
-        const interval = setInterval(fetchStats, 60000); // Update every minute
+        fetchActivity();
+        const interval = setInterval(() => {
+            fetchStats();
+            fetchActivity();
+        }, 60000);
         return () => clearInterval(interval);
     }, []);
 
@@ -288,26 +328,30 @@ export function Dashboard() {
                                     Live Network Pulse
                                 </h3>
                                 <div className="space-y-6 overflow-y-auto pr-2 custom-scrollbar lg:max-h-[350px]">
-                                    {[
-                                        { user: "SP2D...X45", action: "Minted NFT", time: "2m ago", icon: Trophy, color: "text-yellow-500" },
-                                        { user: "SP3F...Z91", action: "Daily Check-in", time: "5m ago", icon: CheckCircle2, color: "text-[#5546FF]" },
-                                        { user: "SP1A...B82", action: "Swapped STX", time: "12m ago", icon: TrendingUp, color: "text-green-500" },
-                                        { user: "SP5M...K10", action: "New Builder Joined", time: "15m ago", icon: Users, color: "text-blue-500" },
-                                        { user: "SP8N...L04", action: "Contract Deployed", time: "22m ago", icon: Terminal, color: "text-purple-500" }
-                                    ].map((act, i) => (
-                                        <div key={i} className="flex items-center justify-between group cursor-default">
-                                            <div className="flex items-center gap-3">
-                                                <div className={`w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-white/10 transition-colors ${act.color}`}>
-                                                    <act.icon className="w-5 h-5" />
-                                                </div>
-                                                <div>
-                                                    <p className="text-xs font-black text-gray-200">{act.user}</p>
-                                                    <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">{act.action}</p>
-                                                </div>
-                                            </div>
-                                            <span className="text-[10px] text-gray-600 font-black">{act.time}</span>
+                                    {isLoadingActivity && activity.length === 0 ? (
+                                        <div className="flex items-center justify-center py-10">
+                                            <div className="w-6 h-6 border-2 border-[#5546FF]/30 border-t-[#5546FF] rounded-full animate-spin" />
                                         </div>
-                                    ))}
+                                    ) : activity.length > 0 ? (
+                                        activity.map((act, i) => (
+                                            <div key={i} className="flex items-center justify-between group cursor-pointer" onClick={() => window.open(`https://explorer.hiro.so/txid/${act.fullAddress}?chain=mainnet`, "_blank")}>
+                                                <div className="flex items-center gap-3">
+                                                    <div className={`w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-white/10 transition-colors ${act.color}`}>
+                                                        <act.icon className="w-5 h-5" />
+                                                    </div>
+                                                    <div>
+                                                        <p className="text-xs font-black text-gray-200">{act.user}</p>
+                                                        <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">{act.action}</p>
+                                                    </div>
+                                                </div>
+                                                <span className="text-[10px] text-gray-600 font-black whitespace-nowrap">{act.time}</span>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <div className="text-center py-10 opacity-50">
+                                            <p className="text-[10px] font-black uppercase tracking-widest">No recent events</p>
+                                        </div>
+                                    )}
                                 </div>
                             </motion.div>
                         </div>
