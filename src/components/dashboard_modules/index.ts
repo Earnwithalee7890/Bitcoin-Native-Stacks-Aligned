@@ -11,3 +11,4 @@ export * from "./Leaderboard";
 export * from "./TransactionHistory";
 export * from "./PortfolioWidget";
 export * from "./ContractAnalytics";
+export * from "./NetworkHealth";
