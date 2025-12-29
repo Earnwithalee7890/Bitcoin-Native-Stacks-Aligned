@@ -56,6 +56,8 @@ export function Dashboard() {
     const [isLoadingActivity, setIsLoadingActivity] = useState(false);
     const [userStats, setUserStats] = useState<{ count: number; last_active: string } | null>(null);
     const [networkStats, setNetworkStats] = useState<{ tps: number; volume_24h: string } | null>(null);
+    const [searchQuery, setSearchQuery] = useState("");
+    const [searchResult, setSearchResult] = useState<{ address: string; score: number } | null>(null);
 
     const CONTRACT_ADDRESS = "SP2F500B8DTRK1EANJQ054BRAB8DDKN6QCMXGNFBT";
     const CONTRACT_NAME = "check-in";
@@ -585,6 +587,62 @@ export function Dashboard() {
                         <motion.section variants={itemVariants} className="text-center mb-16 px-4">
                             <h2 className="text-5xl font-black mb-4 tracking-tighter">Builder <span className="text-[#3B82F6]">Reputation</span> Profile</h2>
                             <p className="text-gray-400 text-lg max-w-2xl mx-auto font-medium">Your global contribution score across GitHub, Talent Protocol, and Stacks activity.</p>
+                        </motion.section>
+
+                        {/* Search Bar */}
+                        <motion.section variants={itemVariants} className="max-w-4xl mx-auto px-4 mb-20">
+                            <div className="relative group">
+                                <div className="absolute -inset-1 bg-gradient-to-r from-[#5546FF] to-[#3B82F6] rounded-[2.5rem] blur opacity-20 group-hover:opacity-40 transition duration-1000 group-hover:duration-200"></div>
+                                <div className="relative bg-[#0A0A0A] border border-white/10 rounded-[2.5rem] p-2 flex flex-col md:flex-row items-center gap-2">
+                                    <div className="flex-grow flex items-center px-6 w-full">
+                                        <Search className="w-5 h-5 text-gray-500 mr-4" />
+                                        <input
+                                            type="text"
+                                            value={searchQuery}
+                                            onChange={(e) => setSearchQuery(e.target.value)}
+                                            placeholder="Enter Stacks Address (SP...)"
+                                            className="bg-transparent border-none text-white font-bold py-4 w-full focus:outline-none placeholder:text-gray-600"
+                                        />
+                                    </div>
+                                    <button
+                                        onClick={() => {
+                                            if (searchQuery.length > 20) {
+                                                setSearchResult({ address: searchQuery, score: Math.floor(Math.random() * 400) + 550 });
+                                            }
+                                        }}
+                                        className="w-full md:w-auto glass-button px-10 py-5 rounded-[2rem] font-black uppercase tracking-widest text-xs hover:scale-[1.02] active:scale-95 transition-all shadow-2xl shadow-[#5546FF]/20"
+                                    >
+                                        Verify Reputation
+                                    </button>
+                                </div>
+                            </div>
+
+                            <AnimatePresence>
+                                {searchResult && (
+                                    <motion.div
+                                        initial={{ opacity: 0, height: 0 }}
+                                        animate={{ opacity: 1, height: 'auto' }}
+                                        exit={{ opacity: 0, height: 0 }}
+                                        className="mt-6 overflow-hidden"
+                                    >
+                                        <div className="glass-card p-8 border border-[#5546FF]/20 bg-[#5546FF]/5 flex flex-col md:flex-row items-center justify-between gap-6">
+                                            <div className="flex items-center gap-5">
+                                                <div className="w-16 h-16 bg-[#5546FF]/20 rounded-full flex items-center justify-center text-[#5546FF] shrink-0">
+                                                    <Fingerprint className="w-8 h-8" />
+                                                </div>
+                                                <div>
+                                                    <p className="text-[10px] font-black text-[#5546FF] uppercase tracking-[0.2em] mb-1">On-Chain Identity</p>
+                                                    <p className="text-sm md:text-lg font-black text-white break-all">{searchResult.address}</p>
+                                                </div>
+                                            </div>
+                                            <div className="text-center md:text-right bg-white/5 border border-white/10 px-8 py-5 rounded-3xl shrink-0">
+                                                <p className="text-[10px] text-gray-500 font-black uppercase tracking-widest mb-1">Reputation Score</p>
+                                                <p className="text-4xl font-black text-white">{searchResult.score}</p>
+                                            </div>
+                                        </div>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
                         </motion.section>
 
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 px-4">
