@@ -63,5 +63,11 @@ This project specifically addresses the **Stacks Builder Challenge #3** requirem
 - **Contract Name**: `check-in`
 - **Network**: Stacks Mainnet
 
+## 👤 Talent Protocol Integration
+
+This project is actively synced with Talent Protocol to track builder reputation.
+- **Verified Account**: Earnwithalee7890
+- **Primary Signals**: GitHub Contributions & Stacks On-chain Activity.
+
 ---
 *Built with ❤️ for the Stacks Community.*
