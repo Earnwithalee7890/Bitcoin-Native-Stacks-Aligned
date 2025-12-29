@@ -37,10 +37,20 @@ import {
     Fingerprint
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { STACKS_CONTRACT_ADDRESS, CONTRACT_NAME, HIRO_API_BASE, COINGECKO_API_BASE } from "@/config/constants";
+import { STACKS_CONTRACT_ADDRESS, HIRO_API_BASE } from "@/config/constants";
 import { MarketData, ActivityItem, UserStats, NetworkStats, SearchResult } from "@/types/dashboard";
 import { useMarketData } from "@/hooks/useMarketData";
 import { useNetworkStats } from "@/hooks/useNetworkStats";
+import {
+    StatsGrid,
+    ActivityFeed,
+    NetworkPulse,
+    BuilderSearch,
+    SecurityModule,
+    EcosystemHub,
+    BuilderJourney,
+    SummaryCard
+} from "./dashboard_modules";
 
 export function Dashboard() {
     const {
@@ -74,6 +84,7 @@ export function Dashboard() {
                 const data = await res.json();
 
                 const formatted = data.results.map((tx: any) => ({
+                    ...tx,
                     user: `${tx.sender_address.slice(0, 4)}...${tx.sender_address.slice(-3)}`,
                     fullAddress: tx.sender_address,
                     action: tx.tx_type === "contract_call" ? "Check-in" : tx.tx_type.replace("_", " "),
@@ -92,7 +103,12 @@ export function Dashboard() {
         const fetchUserStats = async () => {
             if (!userData?.profile?.stxAddress?.mainnet) return;
             try {
-                setUserStats({ count: 5, last_active: "24h ago" });
+                setUserStats({
+                    count: 5,
+                    last_active: "24h ago",
+                    checkInCount: 5,
+                    lastActive: "24h ago"
+                });
             } catch (e) {
                 console.error("User stats fetch error:", e);
             }
@@ -238,32 +254,13 @@ export function Dashboard() {
                             </div>
                         </motion.section>
 
-                        {/* Stats Grid */}
-                        <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 px-2">
-                            {[
-                                { label: "STX Price", val: `$${marketData?.price?.toFixed(2) || "---"}`, icon: BarChart3, color: "text-green-500", bg: "bg-green-500/10", tag: marketData ? `${marketData.change >= 0 ? '+' : ''}${marketData.change.toFixed(1)}%` : null },
-                                { label: "Network Pulse", val: `Block #${blockHeight || "---"}`, icon: Zap, color: "text-blue-500", bg: "bg-blue-500/10", tag: "Live" },
-                                { label: "Your Check-ins", val: isConnected ? `${userStats?.count || 0}` : "---", icon: CheckCircle2, color: "text-purple-500", bg: "bg-purple-500/10", tag: userStats?.last_active || "New" },
-                                { label: "Challenge Rewards", val: "12,000 STX", icon: Trophy, color: "text-yellow-500", bg: "bg-yellow-500/10", tag: "Week 3" }
-                            ].map((stat, i) => (
-                                <div key={i} className="glass-card p-6 flex flex-col justify-between group cursor-default border border-white/5 hover:border-white/10 transition-all">
-                                    <div className="flex justify-between items-start mb-4">
-                                        <div className={`w-12 h-12 ${stat.bg} ${stat.color} rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform`}>
-                                            <stat.icon className="w-6 h-6" />
-                                        </div>
-                                        {stat.tag && (
-                                            <span className={`text-[10px] font-black px-2 py-1 rounded-full border ${stat.color.replace('text', 'border')}/20 ${stat.bg}`}>
-                                                {stat.tag}
-                                            </span>
-                                        )}
-                                    </div>
-                                    <div>
-                                        <p className="text-xs text-gray-500 font-black uppercase tracking-widest">{stat.label}</p>
-                                        <p className="text-2xl font-black mt-1 leading-none">{stat.val}</p>
-                                    </div>
-                                </div>
-                            ))}
-                        </motion.div>
+                        <StatsGrid
+                            userStats={userStats}
+                            marketData={marketData}
+                            currentBlock={blockHeight || 0}
+                            variants={itemVariants}
+                            isConnected={isConnected}
+                        />
 
                         {/* Action Area */}
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -318,97 +315,26 @@ export function Dashboard() {
                                     </div>
                                 </div>
                             </motion.div>
-
-                            {/* Live Feed */}
-                            <motion.div variants={itemVariants} className="glass-card p-6 h-full flex flex-col border border-white/5">
-                                <h3 className="text-xs font-black uppercase tracking-[0.2em] mb-8 flex items-center gap-2 text-gray-400">
-                                    <Activity className="w-4 h-4 text-[#5546FF] animate-pulse" />
-                                    Live Network Pulse
-                                </h3>
-                                <div className="space-y-6 overflow-y-auto pr-2 custom-scrollbar lg:max-h-[350px]">
-                                    {isLoadingActivity && activity.length === 0 ? (
-                                        <div className="flex items-center justify-center py-10">
-                                            <div className="w-6 h-6 border-2 border-[#5546FF]/30 border-t-[#5546FF] rounded-full animate-spin" />
-                                        </div>
-                                    ) : activity.length > 0 ? (
-                                        activity.map((act, i) => (
-                                            <div key={i} className="flex items-center justify-between group cursor-pointer" onClick={() => window.open(`https://explorer.hiro.so/txid/${act.fullAddress}?chain=mainnet`, "_blank")}>
-                                                <div className="flex items-center gap-3">
-                                                    <div className={`w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-white/10 transition-colors ${act.color}`}>
-                                                        <act.icon className="w-5 h-5" />
-                                                    </div>
-                                                    <div>
-                                                        <p className="text-xs font-black text-gray-200">{act.user}</p>
-                                                        <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">{act.action}</p>
-                                                    </div>
-                                                </div>
-                                                <span className="text-[10px] text-gray-600 font-black whitespace-nowrap">{act.time}</span>
-                                            </div>
-                                        ))
-                                    ) : (
-                                        <div className="text-center py-10 opacity-50">
-                                            <p className="text-[10px] font-black uppercase tracking-widest">No recent events</p>
-                                        </div>
-                                    )}
-                                </div>
-                            </motion.div>
                         </div>
 
-                        {/* Stacks Price Trends & Network Pulse */}
-                        <motion.div variants={itemVariants} className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                            <div className="glass-card p-10 border border-white/5 bg-gradient-to-br from-[#5546FF]/5 to-transparent relative overflow-hidden group">
-                                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#5546FF] to-transparent opacity-50" />
-                                <div className="flex flex-col md:flex-row items-center justify-between gap-8 text-left">
-                                    <div className="max-w-md">
-                                        <div className="flex items-center gap-2 mb-4 text-[#3B82F6]">
-                                            <LineChart className="w-6 h-6" />
-                                            <span className="font-black uppercase tracking-widest text-xs">Market Trends</span>
-                                        </div>
-                                        <h3 className="text-4xl font-black mb-4 tracking-tight">STX / BTC Integration</h3>
-                                        <p className="text-gray-400 font-medium leading-relaxed">
-                                            Monitoring the Nakamoto upgrade progress and its impact on STX liquidity.
-                                        </p>
-                                    </div>
-                                    <div className="flex-grow w-full max-w-xl bg-white/5 rounded-3xl p-6 border border-white/5 relative h-32 flex items-end justify-between px-10">
-                                        {[40, 60, 45, 80, 55, 90, 75, 100, 85, 110].map((h, i) => (
-                                            <motion.div
-                                                key={i}
-                                                initial={{ height: 0 }}
-                                                animate={{ height: `${h}%` }}
-                                                transition={{ delay: i * 0.05, duration: 0.8, ease: "easeOut" }}
-                                                className="w-3 bg-gradient-to-t from-[#5546FF] to-[#3B82F6] rounded-t-lg opacity-80"
-                                            />
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                            <motion.div variants={itemVariants} className="lg:col-span-1">
+                                <SummaryCard marketData={marketData} variants={itemVariants} />
+                            </motion.div>
 
-                            <div className="glass-card p-10 border border-white/5 bg-gradient-to-br from-[#3B82F6]/5 to-transparent flex flex-col justify-center">
-                                <div className="flex items-center justify-between mb-8 text-left">
-                                    <div>
-                                        <div className="flex items-center gap-2 mb-2 text-[#5546FF]">
-                                            <Zap className="w-5 h-5" />
-                                            <span className="font-black uppercase tracking-widest text-xs">Network Status</span>
-                                        </div>
-                                        <h3 className="text-3xl font-black tracking-tight">Real-Time Pulse</h3>
-                                    </div>
-                                    <div className="text-right">
-                                        <p className="text-[10px] text-gray-500 font-black uppercase tracking-widest">Global TPS</p>
-                                        <p className="text-3xl font-black text-white">{networkStats?.tps || "0.45"}</p>
-                                    </div>
-                                </div>
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div className="p-4 bg-white/5 border border-white/10 rounded-2xl text-left">
-                                        <p className="text-[10px] text-gray-500 font-black uppercase tracking-widest mb-1">24h Vol</p>
-                                        <p className="text-xl font-black">{networkStats?.volume_24h || "1.2M STX"}</p>
-                                    </div>
-                                    <div className="p-4 bg-white/5 border border-white/10 rounded-2xl text-left">
-                                        <p className="text-[10px] text-gray-500 font-black uppercase tracking-widest mb-1">Security</p>
-                                        <p className="text-xl font-black text-green-500">Optimized</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </motion.div>
+                            <ActivityFeed
+                                activity={activity}
+                                isLoading={isLoadingActivity}
+                                variants={itemVariants}
+                            />
+                        </div>
+
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                            <motion.div variants={itemVariants} className="lg:col-span-2">
+                                <BuilderJourney variants={itemVariants} />
+                            </motion.div>
+                            <NetworkPulse stats={networkStats} variants={itemVariants} />
+                        </div>
 
                         {/* Bento Grid: Featured Section */}
                         <motion.section variants={itemVariants} className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -508,33 +434,7 @@ export function Dashboard() {
                             <p className="text-gray-400 text-lg max-w-2xl font-medium">Explore the leading protocols, marketplaces, and infrastructure built on the Stacks layer.</p>
                         </motion.section>
 
-                        <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-4">
-                            {[
-                                { name: "Hiro", desc: "The foundational tools for Stacks development including Explorer and SDKs.", url: "https://hiro.so", icon: Terminal, tag: "Infrastructure" },
-                                { name: "ALEX Lab", desc: "The definitive DeFi protocol on Stacks for swaps and yield.", url: "https://alexlab.co", icon: BarChart3, tag: "DeFi" },
-                                { name: "Gamma", desc: "The primary NFT marketplace on Bitcoin L2 for creators and collectors.", url: "https://gamma.io", icon: LayoutDashboard, tag: "NFTs" },
-                                { name: "Stacks Foundation", desc: "Supporting the open internet on Bitcoin through grants and governance.", url: "https://stacks.org", icon: Globe, tag: "Governance" },
-                                { name: "Xverse", desc: "The Bitcoin wallet for Web3, supporting Stacks and Ordinals natively.", url: "https://xverse.app", icon: Wallet, tag: "Wallet" },
-                                { name: "Leather", desc: "A premium Bitcoin-native wallet experience for the entire ecosystem.", url: "https://leather.io", icon: Shield, tag: "Wallet" },
-                                { name: "Velar", desc: "Liquidity protocol for Bitcoin assets on Stacks.", url: "https://velar.com", icon: Flame, tag: "DeFi" },
-                                { name: "Stacking DAO", desc: "Liquid stacking for STX - unlock liquidity while earning yield.", url: "https://stackingdao.com", icon: Layers, tag: "Liquid Staking" },
-                                { name: "Arkadiko", desc: "Self-repaying loans and stablecoins on Stacks.", url: "https://arkadiko.finance", icon: Lock, tag: "DeFi" }
-                            ].map((proj, i) => (
-                                <a key={i} href={proj.url} target="_blank" className="glass-card p-8 group hover:-translate-y-2 flex flex-col h-full border border-white/5 hover:border-[#5546FF]/30 transition-all">
-                                    <div className="flex justify-between items-start mb-6">
-                                        <div className="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center group-hover:bg-[#5546FF]/20 transition-all">
-                                            <proj.icon className="w-7 h-7 text-gray-400 group-hover:text-[#5546FF]" />
-                                        </div>
-                                        <span className="text-[10px] font-black uppercase tracking-widest text-[#5546FF] border border-[#5546FF]/20 px-3 py-1 rounded-full group-hover:bg-[#5546FF]/10 transition-colors">{proj.tag}</span>
-                                    </div>
-                                    <h3 className="text-2xl font-black mb-3 group-hover:text-white transition-colors">{proj.name}</h3>
-                                    <p className="text-gray-400 text-sm font-medium mb-8 flex-grow leading-relaxed">{proj.desc}</p>
-                                    <div className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-white/50 group-hover:text-white transition-colors">
-                                        Visit Platform <ArrowUpRight className="w-4 h-4" />
-                                    </div>
-                                </a>
-                            ))}
-                        </motion.div>
+                        <EcosystemHub variants={itemVariants} />
                     </motion.div>
                 )}
 
@@ -552,61 +452,23 @@ export function Dashboard() {
                             <p className="text-gray-400 text-lg max-w-2xl mx-auto font-medium">Your global contribution score across GitHub, Talent Protocol, and Stacks activity.</p>
                         </motion.section>
 
-                        {/* Search Bar */}
-                        <motion.section variants={itemVariants} className="max-w-4xl mx-auto px-4 mb-20">
-                            <div className="relative group">
-                                <div className="absolute -inset-1 bg-gradient-to-r from-[#5546FF] to-[#3B82F6] rounded-[2.5rem] blur opacity-20 group-hover:opacity-40 transition duration-1000 group-hover:duration-200"></div>
-                                <div className="relative bg-[#0A0A0A] border border-white/10 rounded-[2.5rem] p-2 flex flex-col md:flex-row items-center gap-2">
-                                    <div className="flex-grow flex items-center px-6 w-full">
-                                        <Search className="w-5 h-5 text-gray-500 mr-4" />
-                                        <input
-                                            type="text"
-                                            value={searchQuery}
-                                            onChange={(e) => setSearchQuery(e.target.value)}
-                                            placeholder="Enter Stacks Address (SP...)"
-                                            className="bg-transparent border-none text-white font-bold py-4 w-full focus:outline-none placeholder:text-gray-600"
-                                        />
-                                    </div>
-                                    <button
-                                        onClick={() => {
-                                            if (searchQuery.length > 20) {
-                                                setSearchResult({ address: searchQuery, score: Math.floor(Math.random() * 400) + 550 });
-                                            }
-                                        }}
-                                        className="w-full md:w-auto glass-button px-10 py-5 rounded-[2rem] font-black uppercase tracking-widest text-xs hover:scale-[1.02] active:scale-95 transition-all shadow-2xl shadow-[#5546FF]/20"
-                                    >
-                                        Verify Reputation
-                                    </button>
-                                </div>
-                            </div>
-
-                            <AnimatePresence>
-                                {searchResult && (
-                                    <motion.div
-                                        initial={{ opacity: 0, height: 0 }}
-                                        animate={{ opacity: 1, height: 'auto' }}
-                                        exit={{ opacity: 0, height: 0 }}
-                                        className="mt-6 overflow-hidden"
-                                    >
-                                        <div className="glass-card p-8 border border-[#5546FF]/20 bg-[#5546FF]/5 flex flex-col md:flex-row items-center justify-between gap-6">
-                                            <div className="flex items-center gap-5">
-                                                <div className="w-16 h-16 bg-[#5546FF]/20 rounded-full flex items-center justify-center text-[#5546FF] shrink-0">
-                                                    <Fingerprint className="w-8 h-8" />
-                                                </div>
-                                                <div>
-                                                    <p className="text-[10px] font-black text-[#5546FF] uppercase tracking-[0.2em] mb-1">On-Chain Identity</p>
-                                                    <p className="text-sm md:text-lg font-black text-white break-all">{searchResult.address}</p>
-                                                </div>
-                                            </div>
-                                            <div className="text-center md:text-right bg-white/5 border border-white/10 px-8 py-5 rounded-3xl shrink-0">
-                                                <p className="text-[10px] text-gray-500 font-black uppercase tracking-widest mb-1">Reputation Score</p>
-                                                <p className="text-4xl font-black text-white">{searchResult.score}</p>
-                                            </div>
-                                        </div>
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
-                        </motion.section>
+                        <BuilderSearch
+                            searchQuery={searchQuery}
+                            setSearchQuery={setSearchQuery}
+                            handleSearch={() => {
+                                if (searchQuery.length > 20) {
+                                    setSearchResult({
+                                        address: searchQuery,
+                                        score: Math.floor(Math.random() * 400) + 550,
+                                        reputationScore: Math.floor(Math.random() * 40) + 60,
+                                        githubVerified: true,
+                                        talentScore: Math.floor(Math.random() * 30) + 70
+                                    });
+                                }
+                            }}
+                            searchResult={searchResult}
+                            variants={itemVariants}
+                        />
 
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 px-4">
                             <motion.div variants={itemVariants} className="glass-card p-10 bg-gradient-to-br from-[#5546FF]/5 to-transparent border border-white/5">
@@ -709,39 +571,7 @@ export function Dashboard() {
                                 ))}
                             </div>
                         </motion.section>
-                        {/* Clarity 4 Security Section (NEW) */}
-                        <motion.section variants={itemVariants} className="px-4">
-                            <h3 className="text-2xl font-black mb-8 px-4 border-l-4 border-green-500">Clarity 4 Security Model</h3>
-                            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                                <div className="glass-card p-10 bg-gradient-to-br from-green-500/5 to-transparent border border-green-500/10 hover:border-green-500/30 transition-all flex flex-col gap-6">
-                                    <div className="w-14 h-14 bg-green-500/20 rounded-2xl flex items-center justify-center text-green-500">
-                                        <Lock className="w-7 h-7" />
-                                    </div>
-                                    <h4 className="text-xl font-black">Nakamoto Ready</h4>
-                                    <p className="text-gray-400 text-sm font-medium leading-relaxed">
-                                        This protocol is built with Clarity 4, utilizing <span className="text-green-500 font-black">stacks-block-height</span> for precise 24-hour interval tracking, fully aligned with the Nakamoto upgrade.
-                                    </p>
-                                </div>
-                                <div className="glass-card p-10 bg-gradient-to-br from-[#5546FF]/5 to-transparent border border-white/5 hover:border-[#5546FF]/30 transition-all flex flex-col gap-6">
-                                    <div className="w-14 h-14 bg-[#5546FF]/20 rounded-2xl flex items-center justify-center text-[#5546FF]">
-                                        <Shield className="w-7 h-7" />
-                                    </div>
-                                    <h4 className="text-xl font-black">Deterministic Safety</h4>
-                                    <p className="text-gray-400 text-sm font-medium leading-relaxed">
-                                        Leveraging Clarity's interpreted nature to prevent re-entrancy attacks. Our <span className="text-[#5546FF] font-black">Post-condition</span> checks ensure your funds never leave your wallet without explicit consent.
-                                    </p>
-                                </div>
-                                <div className="glass-card p-10 bg-gradient-to-br from-[#3B82F6]/5 to-transparent border border-white/5 hover:border-[#3B82F6]/30 transition-all flex flex-col gap-6">
-                                    <div className="w-14 h-14 bg-[#3B82F6]/20 rounded-2xl flex items-center justify-center text-[#3B82F6]">
-                                        <Terminal className="w-7 h-7" />
-                                    </div>
-                                    <h4 className="text-xl font-black">On-Chain Transparency</h4>
-                                    <p className="text-gray-400 text-sm font-medium leading-relaxed">
-                                        No hidden compiler logic. Every line of the `check-in.clar` contract is readable directly on the explorer, ensuring 100% auditable builder reputation.
-                                    </p>
-                                </div>
-                            </div>
-                        </motion.section>
+                        <SecurityModule variants={itemVariants} />
                     </motion.div>
                 )}
             </AnimatePresence>
