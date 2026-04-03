@@ -72,3 +72,6 @@ This project is actively synced with Talent Protocol to track builder reputation
 
 ---
 *Built with ❤️ for the Stacks Community.*
+
+## Architecture
+Uses Next.js App Router and Stacks.js.
