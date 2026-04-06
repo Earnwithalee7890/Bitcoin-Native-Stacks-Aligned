@@ -29,6 +29,14 @@ Built for the **Stacks Builder Challenge #3**, this project is a premium dashboa
 - **Smart Contract**: Clarity 4 (Deployed on Stacks Mainnet)
 - **Icons & Animations**: Lucide-React + Framer Motion
 
+## Key Features (April 2026 Update)
+
+-   **Global Toast Notification System**: Real-time feedback for all blockchain interactions (check-ins, pulsing, wallet connection).
+-   **Persistent User Preferences**: Stacks Dashboard now remembers your active tab and layout density (Compact Mode) across sessions using `localStorage`.
+-   **Performance Optimized**: Core state management and layout logic are memoized with `useCallback` and `useMemo` for a stutter-free experience.
+-   **Expanded Ecosystem Hub**: Deep integrations with ALEX, Stacking DAO, Zest, and Gamma.io.
+-   **Refined UI/UX**: Premium aesthetics powered by TailwindCSS and Framer Motion.
+
 ## 🚀 Getting Started
 
 ### Prerequisites
