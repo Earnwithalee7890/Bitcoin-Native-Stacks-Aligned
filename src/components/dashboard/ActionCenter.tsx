@@ -37,13 +37,15 @@ export function ActionCenter({ isConnected, isCheckingIn, doCheckIn, showSuccess
                     <button
                         onClick={doCheckIn}
                         disabled={!isConnected || isCheckingIn || txStatus === "pending"}
-                        className={`glass-button w-full sm:w-auto px-12 py-6 rounded-[2.5rem] font-black text-2xl flex items-center justify-center gap-4 transition-all ${(!isConnected || isCheckingIn || txStatus === "pending") ? 'opacity-50 grayscale cursor-not-allowed' : ''} active:scale-95`}
+                        aria-label={isCheckingIn || txStatus === "pending" ? "Transaction in progress" : "Confirm check-in on-chain"}
+                        aria-busy={isCheckingIn || txStatus === "pending"}
+                        className={`glass-button w-full sm:w-auto px-12 py-6 rounded-[2.5rem] font-black text-2xl flex items-center justify-center gap-4 transition-all ${(!isConnected || isCheckingIn || txStatus === "pending") ? 'opacity-50 grayscale cursor-not-allowed' : ''} active:scale-95 focus-visible:ring-4 focus-visible:ring-[#5546FF] focus-visible:outline-none`}
                     >
                         {isCheckingIn || txStatus === "pending" ? (
-                            <div className="w-8 h-8 border-4 border-white/20 border-t-white rounded-full animate-spin" />
+                            <div className="w-8 h-8 border-4 border-white/20 border-t-white rounded-full animate-spin" aria-hidden="true" />
                         ) : (
                             <>
-                                <Sparkles className="w-7 h-7" />
+                                <Sparkles className="w-7 h-7" aria-hidden="true" />
                                 <span>CONFIRM ON-CHAIN</span>
                             </>
                         )}

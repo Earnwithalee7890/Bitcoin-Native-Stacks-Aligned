@@ -37,17 +37,20 @@ export function Navigation({ activeTab, setActiveTab }: NavigationProps) {
         </div>
       </div>
 
-      <div className="flex flex-wrap items-center gap-4 md:gap-8 text-[10px] md:text-sm font-black uppercase tracking-widest text-gray-500">
+      <div className="flex items-center gap-4 bg-white/5 p-2 rounded-2xl border border-white/10" role="tablist" aria-label="Dashboard views">
         {["overview", "ecosystem", "builder"].map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`hover:text-white transition-all relative px-2 py-1 ${activeTab === tab ? 'text-white' : ''}`}
+            role="tab"
+            aria-selected={activeTab === tab}
+            aria-controls={`${tab}-panel`}
+            className={`px-6 py-2 rounded-xl text-sm font-black uppercase tracking-widest transition-all ${activeTab === tab
+              ? "bg-[#5546FF] text-white shadow-lg shadow-[#5546FF]/30"
+              : "text-gray-500 hover:text-gray-300 hover:bg-white/5"
+              } focus-visible:ring-2 focus-visible:ring-[#5546FF] focus-visible:outline-none`}
           >
             {tab}
-            {activeTab === tab && (
-              <motion.div layoutId="nav-pill" className="absolute -bottom-1 left-0 right-0 h-0.5 bg-[#5546FF]" />
-            )}
           </button>
         ))}
       </div>

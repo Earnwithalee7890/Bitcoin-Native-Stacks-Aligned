@@ -23,15 +23,20 @@ export function SocialLinks() {
                 <h2 className="text-3xl font-black tracking-tight whitespace-nowrap px-4 bg-clip-text text-transparent bg-gradient-to-r from-gray-400 to-white">Connect with the Creator</h2>
                 <div className="h-px bg-white/10 flex-grow" />
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 px-4">
-                {SOCIAL_LINKS.map((link, i) => (
-                    <a key={i} href={link.url} target="_blank" className={`glass-card p-6 flex flex-col items-center gap-4 transition-all hover:-translate-y-2 border border-white/5 ${link.color}`}>
-                        <link.icon className="w-10 h-10" />
-                        <div className="text-center">
-                            <p className="font-black text-sm uppercase tracking-widest text-[#5546FF]">{link.name}</p>
-                            <p className="text-xs text-gray-500 font-bold mt-1">{link.handle}</p>
-                        </div>
-                    </a>
+            <div className="flex flex-wrap gap-4">
+                {[
+                    { icon: Twitter, label: "Follow on Twitter", href: "https://twitter.com/aleekhoso" },
+                    { icon: Github, label: "View GitHub Profile", href: "https://github.com/sawera-mastoi" },
+                    { icon: Globe, label: "Visit Personal Website", href: "https://aleekhoso.com" }
+                ].map((social, i) => (
+                    <button
+                        key={i}
+                        onClick={() => window.open(social.href, "_blank")}
+                        aria-label={social.label}
+                        className="glass-button p-4 rounded-2xl hover:scale-110 transition-transform active:scale-95 focus-visible:ring-2 focus-visible:ring-[#5546FF] focus-visible:outline-none"
+                    >
+                        <social.icon className="w-6 h-6" aria-hidden="true" />
+                    </button>
                 ))}
             </div>
         </motion.section>

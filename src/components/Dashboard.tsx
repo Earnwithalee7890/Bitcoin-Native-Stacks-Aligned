@@ -134,14 +134,19 @@ export function Dashboard() {
 
     return (
         <main className="min-h-screen p-4 md:p-8 max-w-7xl mx-auto relative overflow-hidden bg-grid">
+            <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-[#5546FF] text-white px-4 py-2 rounded-lg z-50 font-black uppercase tracking-widest text-xs transition-all">
+                Skip to content
+            </a>
+
             {/* Background Decorative Elements */}
-            <div className="glow-mesh" />
-            <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-[#5546FF]/10 blur-[120px] rounded-full pointer-events-none" />
-            <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-[#3B82F6]/10 blur-[120px] rounded-full pointer-events-none" />
+            <div className="glow-mesh" aria-hidden="true" />
+            <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-[#5546FF]/10 blur-[120px] rounded-full pointer-events-none" aria-hidden="true" />
+            <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-[#3B82F6]/10 blur-[120px] rounded-full pointer-events-none" aria-hidden="true" />
 
             <Navigation activeTab={activeTab} setActiveTab={setActiveTab} />
 
-            <AnimatePresence mode="wait">
+            <div id="main-content">
+                <AnimatePresence mode="wait">
                 {activeTab === "overview" && (
                     <motion.div
                         key="overview"
@@ -357,6 +362,8 @@ export function Dashboard() {
                     </motion.div>
                 )}
             </AnimatePresence>
+
+            </div>
 
             <Footer />
         </main>

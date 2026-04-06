@@ -27,11 +27,13 @@ export function BuilderSearch({ searchQuery, setSearchQuery, handleSearch, searc
                         placeholder="Enter Stacks address..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
+                        aria-label="Stacks wallet address for reputation search"
                         className="bg-transparent border-none focus:ring-0 text-sm text-white px-4 py-2 w-full md:w-64 font-medium"
                     />
                     <button
                         onClick={handleSearch}
-                        className="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all shadow-lg shadow-blue-900/20 active:scale-95 whitespace-nowrap"
+                        aria-label="Verify builder reputation"
+                        className="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all shadow-lg shadow-blue-900/20 active:scale-95 whitespace-nowrap focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:outline-none"
                     >
                         Verify Reputation
                     </button>
