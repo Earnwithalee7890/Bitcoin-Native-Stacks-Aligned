@@ -9,9 +9,9 @@ export function useNetworkStats() {
     useEffect(() => {
         const fetchNetwork = async () => {
             try {
-                const heightRes = await fetch(`${HIRO_API_BASE}/v2/info`);
-                const heightJson = await heightRes.json();
-                setBlockHeight(heightJson.stacks_tip_height);
+                const { api } = await import("@earnwithalee/stacksrank-sdk");
+                const height = await api.getBlockHeight();
+                setBlockHeight(height);
 
                 setNetworkStats({
                     tps: 0.45,
@@ -26,6 +26,7 @@ export function useNetworkStats() {
         const interval = setInterval(fetchNetwork, 60000);
         return () => clearInterval(interval);
     }, []);
+
 
     return { blockHeight, networkStats };
 }
