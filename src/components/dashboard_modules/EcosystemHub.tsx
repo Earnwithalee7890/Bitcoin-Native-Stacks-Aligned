@@ -6,6 +6,9 @@ interface EcosystemHubProps {
 }
 
 const PROJECTS = [
+    { title: "ALEX Protocol", desc: "Leading DeFi on Stacks & Bitcoin", icon: Flame, color: "text-red-500", bg: "bg-red-500/10", link: "https://alexlab.co" },
+    { title: "Stacking DAO", desc: "Liquid stacking for STX", icon: Zap, color: "text-yellow-500", bg: "bg-yellow-500/10", link: "https://stackingdao.com" },
+    { title: "Zest Protocol", desc: "Native Bitcoin lending market", icon: Layout, color: "text-cyan-500", bg: "bg-cyan-500/10", link: "https://zestprotocol.com" },
     { title: "Hiro Explorer", desc: "Track transactions & blocks", icon: Layout, color: "text-blue-500", bg: "bg-blue-500/10", link: "https://explorer.hiro.so" },
     { title: "Stacks Docs", desc: "Clarity smart contracts", icon: Zap, color: "text-orange-500", bg: "bg-orange-500/10", link: "https://docs.stacks.co" },
     { title: "Gamma.io", desc: "NFT marketplace on Bitcoin", icon: Flame, color: "text-purple-500", bg: "bg-purple-500/10", link: "https://gamma.io" },
