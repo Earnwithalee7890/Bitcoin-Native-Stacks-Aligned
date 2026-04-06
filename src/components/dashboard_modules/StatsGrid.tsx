@@ -9,11 +9,12 @@ interface StatsGridProps {
     currentBlock: number;
     variants: any;
     isConnected: boolean;
+    isCompact?: boolean;
 }
 
-export function StatsGrid({ userStats, marketData, currentBlock, variants, isConnected }: StatsGridProps) {
+export function StatsGrid({ userStats, marketData, currentBlock, variants, isConnected, isCompact }: StatsGridProps) {
     return (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className={`grid grid-cols-1 md:grid-cols-3 gap-${isCompact ? '4' : '6'}`}>
             <StatsCard
                 label="Your Check-ins"
                 val={isConnected ? (userStats?.checkInCount.toString() || "0") : "N/A"}

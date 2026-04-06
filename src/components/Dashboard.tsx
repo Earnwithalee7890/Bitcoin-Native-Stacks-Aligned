@@ -32,6 +32,8 @@ import { SocialLinks } from "./dashboard/SocialLinks";
 import { Roadmap } from "./dashboard/Roadmap";
 import { Footer } from "./dashboard/Footer";
 
+import { useLocalStorage } from "@/hooks/useLocalStorage";
+
 export function Dashboard() {
     const {
         isConnected,
@@ -47,7 +49,8 @@ export function Dashboard() {
     const { blockHeight, networkStats } = useNetworkStats();
 
     // Local UI State
-    const [activeTab, setActiveTab] = useState("overview");
+    const [activeTab, setActiveTab] = useLocalStorage("stx_active_tab", "overview");
+    const [isCompact, setIsCompact] = useLocalStorage("stx_is_compact", false);
     const [activity, setActivity] = useState<ActivityItem[]>([]);
     const [isLoadingActivity, setIsLoadingActivity] = useState(false);
     const [userStats, setUserStats] = useState<UserStats | null>(null);
@@ -136,7 +139,7 @@ export function Dashboard() {
     }), []);
 
     return (
-        <main className="min-h-screen p-4 md:p-8 max-w-7xl mx-auto relative overflow-hidden bg-grid">
+        <main className={`min-h-screen p-4 md:p-8 max-w-7xl mx-auto relative overflow-hidden bg-grid ${isCompact ? 'px-2 md:px-4' : ''}`}>
             <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-[#5546FF] text-white px-4 py-2 rounded-lg z-50 font-black uppercase tracking-widest text-xs transition-all">
                 Skip to content
             </a>
@@ -146,7 +149,7 @@ export function Dashboard() {
             <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-[#5546FF]/10 blur-[120px] rounded-full pointer-events-none" aria-hidden="true" />
             <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-[#3B82F6]/10 blur-[120px] rounded-full pointer-events-none" aria-hidden="true" />
 
-            <Navigation activeTab={activeTab} setActiveTab={setActiveTab} />
+            <Navigation activeTab={activeTab} setActiveTab={setActiveTab} isCompact={isCompact} setIsCompact={setIsCompact} />
 
             <div id="main-content">
                 <AnimatePresence mode="wait">
@@ -167,6 +170,7 @@ export function Dashboard() {
                             currentBlock={blockHeight || 0}
                             variants={itemVariants}
                             isConnected={isConnected}
+                            isCompact={isCompact}
                         />
 
                         {/* Action Area */}

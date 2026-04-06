@@ -1,15 +1,17 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Rocket, Wallet, Users } from "lucide-react";
+import { Rocket, Wallet, Users, LayoutGrid, List } from "lucide-react";
 import { useStacks } from "@/components/StacksProvider";
 
 interface NavigationProps {
   activeTab: string;
   setActiveTab: (tab: string) => void;
+  isCompact: boolean;
+  setIsCompact: (compact: boolean) => void;
 }
 
-export function Navigation({ activeTab, setActiveTab }: NavigationProps) {
+export function Navigation({ activeTab, setActiveTab, isCompact, setIsCompact }: NavigationProps) {
   const {
     connectWallet,
     isConnected,
@@ -37,22 +39,36 @@ export function Navigation({ activeTab, setActiveTab }: NavigationProps) {
         </div>
       </div>
 
-      <div className="flex items-center gap-4 bg-white/5 p-2 rounded-2xl border border-white/10" role="tablist" aria-label="Dashboard views">
-        {["overview", "ecosystem", "builder"].map((tab) => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            role="tab"
-            aria-selected={activeTab === tab}
-            aria-controls={`${tab}-panel`}
-            className={`px-6 py-2 rounded-xl text-sm font-black uppercase tracking-widest transition-all ${activeTab === tab
-              ? "bg-[#5546FF] text-white shadow-lg shadow-[#5546FF]/30"
-              : "text-gray-500 hover:text-gray-300 hover:bg-white/5"
-              } focus-visible:ring-2 focus-visible:ring-[#5546FF] focus-visible:outline-none`}
-          >
-            {tab}
-          </button>
-        ))}
+      <div className="flex items-center gap-6">
+        <div className="flex items-center gap-4 bg-white/5 p-2 rounded-2xl border border-white/10" role="tablist" aria-label="Dashboard views">
+          {["overview", "ecosystem", "builder"].map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              role="tab"
+              aria-selected={activeTab === tab}
+              aria-controls={`${tab}-panel`}
+              className={`px-6 py-2 rounded-xl text-sm font-black uppercase tracking-widest transition-all ${activeTab === tab
+                ? "bg-[#5546FF] text-white shadow-lg shadow-[#5546FF]/30"
+                : "text-gray-500 hover:text-gray-300 hover:bg-white/5"
+                } focus-visible:ring-2 focus-visible:ring-[#5546FF] focus-visible:outline-none`}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
+
+        <button
+          onClick={() => setIsCompact(!isCompact)}
+          className="p-3 rounded-xl bg-white/5 border border-white/10 text-gray-400 hover:text-white transition-all hover:bg-white/10 group relative"
+          title={isCompact ? "Standard View" : "Compact View"}
+          aria-label="Toggle layout density"
+        >
+          {isCompact ? <List className="w-5 h-5" /> : <LayoutGrid className="w-5 h-5" />}
+          <span className="absolute -bottom-10 left-1/2 -translate-x-1/2 bg-black text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap font-black uppercase tracking-widest pointer-events-none">
+            {isCompact ? "List View" : "Grid View"}
+          </span>
+        </button>
       </div>
 
       <div className="flex items-center gap-4">
