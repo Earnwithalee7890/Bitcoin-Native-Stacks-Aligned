@@ -15,7 +15,9 @@ interface StacksContextType {
   showSuccess: boolean;
   pulseSuccess: boolean;
   pulseTxId: string | null;
+  stxBalance: number | null;
 }
+
 
 const StacksContext = createContext<StacksContextType | undefined>(undefined);
 
@@ -29,6 +31,8 @@ export function StacksProvider({ children }: { children: ReactNode }) {
   const [showSuccess, setShowSuccess] = useState(false);
   const [pulseSuccess, setPulseSuccess] = useState(false);
   const [pulseTxId, setPulseTxId] = useState<string | null>(null);
+  const [stxBalance, setStxBalance] = useState<number | null>(null);
+
 
   // Stored references for browser-only SDKs
   const [sdks, setSdks] = useState<{
@@ -98,20 +102,24 @@ export function StacksProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const connectWallet = () => {
-    if (!sdks) return;
-    sdks.connect.showConnect({
-      appDetails: {
-        name: 'Bitcoin-Native & Stacks-Aligned',
-        icon: window.location.origin + '/favicon.ico',
-      },
-      userSession: sdks.session,
-      onFinish: () => {
-        setUserData(sdks.session.loadUserData());
-        window.location.reload();
-      },
-    });
+  const connectWallet = async () => {
+    if (typeof window === 'undefined') return;
+    try {
+      const { wallet } = await import("@earnwithalee/stacksrank-sdk");
+      const address = await wallet.connectWallet();
+      if (address) {
+        // Sync with existing Connect session if needed, but SDK handles basic connection
+        // For compatibility with rest of app, we still use Connect session if possible
+        if (sdks?.session) {
+           // Reloading as the SDK might use its own internal state management
+           window.location.reload();
+        }
+      }
+    } catch (e) {
+      console.error("Connection failed:", e);
+    }
   };
+
 
   const disconnectWallet = () => {
     if (sdks?.session) {
@@ -122,77 +130,76 @@ export function StacksProvider({ children }: { children: ReactNode }) {
   };
 
   const doCheckIn = async () => {
-    if (!sdks || !userData) return;
+    if (!userData) return;
     setIsCheckingIn(true);
     setShowSuccess(false);
 
     try {
-      const network = sdks.network.STACKS_MAINNET;
-      const stxAddress = userData.profile.stxAddress.mainnet;
-      const amount = 10000; // 0.01 STX
-
-      // Use Allow mode without strict post-conditions to support self-spending during tests.
-      // Use constants for better reliability
+      const { wallet } = await import("@earnwithalee/stacksrank-sdk");
       const { STACKS_CONTRACT_ADDRESS, STACKS_CONTRACT_NAME } = await import("@/config/constants");
 
-      await sdks.connect.openContractCall({
-        network,
-        contractAddress: STACKS_CONTRACT_ADDRESS,
-        contractName: STACKS_CONTRACT_NAME,
+      await wallet.callContract({
+        contract: `${STACKS_CONTRACT_ADDRESS}.${STACKS_CONTRACT_NAME}`,
         functionName: "check-in",
         functionArgs: [],
-        postConditionMode: sdks.tx.PostConditionMode.Allow,
-        postConditions: [],
-        onFinish: (data: any) => {
-          console.log("Transaction broadcasted:", data.txId);
-          setIsCheckingIn(false);
-          setShowSuccess(true);
-          setTimeout(() => setShowSuccess(false), 5000);
-        },
-        onCancel: () => {
-          setIsCheckingIn(false);
-        },
+        network: 'mainnet'
       });
+      
+      setIsCheckingIn(false);
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), 5000);
     } catch (error) {
       console.error("Check-in error:", error);
+      setIsCheckingIn(false);
     }
   };
 
+
   const doPulse = async () => {
-    if (!sdks || !userData) return;
+    if (!userData) return;
     setIsPulsing(true);
     setPulseSuccess(false);
 
     try {
-      const network = sdks.network.STACKS_MAINNET;
+      const { wallet } = await import("@earnwithalee/stacksrank-sdk");
       const { STACKS_CONTRACT_ADDRESS, ENGAGEMENT_CONTRACT_NAME } = await import("@/config/constants");
 
-      await sdks.connect.openContractCall({
-        network,
-        contractAddress: STACKS_CONTRACT_ADDRESS,
-        contractName: ENGAGEMENT_CONTRACT_NAME,
+      const tx: any = await wallet.callContract({
+        contract: `${STACKS_CONTRACT_ADDRESS}.${ENGAGEMENT_CONTRACT_NAME}`,
         functionName: "pulse",
         functionArgs: [],
-        postConditionMode: sdks.tx.PostConditionMode.Allow,
-        postConditions: [],
-        onFinish: (data: any) => {
-          setIsPulsing(false);
-          setPulseSuccess(true);
-          setPulseTxId(data.txId);
-          setTimeout(() => {
-            setPulseSuccess(false);
-            setPulseTxId(null);
-          }, 5000);
-        },
-        onCancel: () => {
-          setIsPulsing(false);
-        },
+        network: 'mainnet'
       });
+
+      setIsPulsing(false);
+      setPulseSuccess(true);
+      if (tx && tx.txId) setPulseTxId(tx.txId);
+      setTimeout(() => {
+        setPulseSuccess(false);
+        setPulseTxId(null);
+      }, 5000);
     } catch (error) {
       console.error("Pulse error:", error);
       setIsPulsing(false);
     }
   };
+
+  // Sync balance using SDK
+  useEffect(() => {
+    const fetchBalance = async () => {
+      if (userData?.profile?.stxAddress?.mainnet) {
+        try {
+          const { api } = await import("@earnwithalee/stacksrank-sdk");
+          const balance = await api.getBalance(userData.profile.stxAddress.mainnet);
+          setStxBalance(balance.stx);
+        } catch (e) {
+          console.error("Balance fetch error:", e);
+        }
+      }
+    };
+    fetchBalance();
+  }, [userData]);
+
 
   return (
     <StacksContext.Provider
@@ -208,8 +215,10 @@ export function StacksProvider({ children }: { children: ReactNode }) {
         isPulsing,
         showSuccess,
         pulseSuccess,
-        pulseTxId
+        pulseTxId,
+        stxBalance
       }}
+
     >
       {children}
     </StacksContext.Provider>
