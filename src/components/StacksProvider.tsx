@@ -130,12 +130,13 @@ export function StacksProvider({ children }: { children: ReactNode }) {
     setTxStatus("pending");
     setLastTxId(txId);
 
-    const check = async () => {
+    const check = async (): Promise<"success" | "pending" | "failed" | "dropped"> => {
       try {
         const { HIRO_API_BASE } = await import("@/config/constants");
+        const { HiroTxResponse } = await import("@/types/dashboard");
         const res = await fetch(`${HIRO_API_BASE}/extended/v1/tx/${txId}`);
         if (!res.ok) return "pending";
-        const data = await res.json();
+        const data: any = await res.json(); // Use any for raw then cast if needed
         return data.tx_status;
       } catch (e) {
         return "pending";

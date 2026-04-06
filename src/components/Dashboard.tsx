@@ -60,10 +60,16 @@ export function Dashboard() {
             setIsLoadingActivity(true);
             try {
                 const res = await fetch(`${HIRO_API_BASE}/extended/v1/address/${STACKS_CONTRACT_ADDRESS}/transactions?limit=10`);
-                const data = await res.json();
+                if (!res.ok) throw new Error("Failed to fetch activity");
+                const data: { results: any[] } = await res.json();
 
-                const formatted = data.results.map((tx: any) => ({
-                    ...tx,
+                const formatted: ActivityItem[] = data.results.map((tx: any) => ({
+                    tx_id: tx.tx_id,
+                    tx_status: tx.tx_status,
+                    block_height: tx.block_height,
+                    burn_block_time: tx.burn_block_time,
+                    sender_address: tx.sender_address,
+                    tx_type: tx.tx_type,
                     user: `${tx.sender_address.slice(0, 4)}...${tx.sender_address.slice(-3)}`,
                     fullAddress: tx.sender_address,
                     action: tx.tx_type === "contract_call" ? "Check-in" : tx.tx_type.replace("_", " "),
