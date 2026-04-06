@@ -56,6 +56,7 @@ import {
     ContractAnalytics,
     NetworkHealth
 } from "./dashboard_modules";
+import { EngagementModule } from "./EngagementModule";
 
 export function Dashboard() {
     const {
@@ -319,6 +320,10 @@ export function Dashboard() {
                                         </AnimatePresence>
                                     </div>
                                 </div>
+                            </motion.div>
+
+                            <motion.div variants={itemVariants} className="lg:col-span-1">
+                                <EngagementModule />
                             </motion.div>
                         </div>
 

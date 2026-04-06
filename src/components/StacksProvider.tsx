@@ -7,10 +7,14 @@ interface StacksContextType {
   connectWallet: () => void;
   disconnectWallet: () => void;
   doCheckIn: () => Promise<void>;
+  doPulse: () => Promise<void>;
   isConnected: boolean;
   isInitializing: boolean;
   isCheckingIn: boolean;
+  isPulsing: boolean;
   showSuccess: boolean;
+  pulseSuccess: boolean;
+  pulseTxId: string | null;
 }
 
 const StacksContext = createContext<StacksContextType | undefined>(undefined);
@@ -21,7 +25,10 @@ export function StacksProvider({ children }: { children: ReactNode }) {
   const [userData, setUserData] = useState<any>(null);
   const [isInitializing, setIsInitializing] = useState(true);
   const [isCheckingIn, setIsCheckingIn] = useState(false);
+  const [isPulsing, setIsPulsing] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [pulseSuccess, setPulseSuccess] = useState(false);
+  const [pulseTxId, setPulseTxId] = useState<string | null>(null);
 
   // Stored references for browser-only SDKs
   const [sdks, setSdks] = useState<{
@@ -148,7 +155,42 @@ export function StacksProvider({ children }: { children: ReactNode }) {
       });
     } catch (error) {
       console.error("Check-in error:", error);
-      setIsCheckingIn(false);
+    }
+  };
+
+  const doPulse = async () => {
+    if (!sdks || !userData) return;
+    setIsPulsing(true);
+    setPulseSuccess(false);
+
+    try {
+      const network = sdks.network.STACKS_MAINNET;
+      const { STACKS_CONTRACT_ADDRESS, ENGAGEMENT_CONTRACT_NAME } = await import("@/config/constants");
+
+      await sdks.connect.openContractCall({
+        network,
+        contractAddress: STACKS_CONTRACT_ADDRESS,
+        contractName: ENGAGEMENT_CONTRACT_NAME,
+        functionName: "pulse",
+        functionArgs: [],
+        postConditionMode: sdks.tx.PostConditionMode.Allow,
+        postConditions: [],
+        onFinish: (data: any) => {
+          setIsPulsing(false);
+          setPulseSuccess(true);
+          setPulseTxId(data.txId);
+          setTimeout(() => {
+            setPulseSuccess(false);
+            setPulseTxId(null);
+          }, 5000);
+        },
+        onCancel: () => {
+          setIsPulsing(false);
+        },
+      });
+    } catch (error) {
+      console.error("Pulse error:", error);
+      setIsPulsing(false);
     }
   };
 
@@ -159,10 +201,14 @@ export function StacksProvider({ children }: { children: ReactNode }) {
         connectWallet,
         disconnectWallet,
         doCheckIn,
+        doPulse,
         isConnected: !!userData,
         isInitializing,
         isCheckingIn,
-        showSuccess
+        isPulsing,
+        showSuccess,
+        pulseSuccess,
+        pulseTxId
       }}
     >
       {children}
