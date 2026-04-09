@@ -12,38 +12,18 @@ interface PortfolioWidgetProps {
 }
 
 export function PortfolioWidget({ variants }: PortfolioWidgetProps) {
-    const { userData, isConnected } = useStacks();
+    const { userData, isConnected, stxBalance } = useStacks();
     const marketData = useMarketData();
-    const [stxBalance, setStxBalance] = useState<number | null>(null);
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
-        if (!isConnected || !userData?.profile?.stxAddress?.mainnet) {
-            setStxBalance(null);
-            return;
-        }
-
-        const fetchBalance = async () => {
+        if (isConnected && stxBalance === null) {
             setIsLoading(true);
-            try {
-                const address = userData.profile.stxAddress.mainnet;
-                const response = await fetch(`${HIRO_API_BASE}/v2/accounts/${address}?proof=0`);
-                const data = await response.json();
-                // Balance is in microSTX, convert to STX
-                const balance = parseInt(data.balance, 10) / 1_000_000;
-                setStxBalance(balance);
-            } catch (error) {
-                console.error("Failed to fetch balance:", error);
-                setStxBalance(null);
-            } finally {
-                setIsLoading(false);
-            }
-        };
+        } else {
+            setIsLoading(false);
+        }
+    }, [isConnected, stxBalance]);
 
-        fetchBalance();
-        const interval = setInterval(fetchBalance, 30000); // Refresh every 30s
-        return () => clearInterval(interval);
-    }, [isConnected, userData]);
 
     const usdValue = stxBalance && marketData?.price ? stxBalance * marketData.price : null;
     const priceChange = marketData?.change || 0;

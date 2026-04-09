@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@earnwithalee/stacksrank-sdk": "^1.0.0",
     "@reown/appkit": "^1.8.15",
     "@stacks/common": "^7.3.1",
     "@stacks/connect": "^8.2.4",

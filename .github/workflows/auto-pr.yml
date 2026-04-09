@@ -1,0 +1,58 @@
+name: Auto Create PRs
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/auto-pr.yml'
+  workflow_dispatch:
+
+jobs:
+  create-prs:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create PRs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # The branches we want to create PRs for
+          BRANCHES=(
+            "refactor/dashboard-components"
+            "feat/tx-polling"
+            "fix/type-safety"
+            "feat/accessibility"
+            "feat/toast-notifications"
+            "perf/memoization"
+            "feat/user-preferences"
+            "feat/ecosystem-extension"
+            "dx/linting-rules"
+            "feat/docs-and-polish"
+          )
+          
+          # Iterate over each branch and try to create a PR
+          for branch in "${BRANCHES[@]}"; do
+            echo "Processing $branch..."
+            
+            # Checkout the branch so gh CLI knows there are changes
+            git checkout "$branch" || { echo "Branch $branch not found locally, skipping..."; continue; }
+            
+            # Use `gh` CLI to check if PR already exists
+            EXISTS=$(gh pr list --head "$branch" --base main --json number --jq 'length')
+            
+            if [ "$EXISTS" -eq "0" ]; then
+              echo "Creating PR for $branch"
+              # Get the last commit message on the branch to use as the title
+              TITLE=$(git log -1 --pretty=%s)
+              gh pr create --head "$branch" --base main --title "$TITLE" --body "Automated PR created by CI/CD via GitHub Actions." || echo "Skipped creating PR for $branch"
+            else
+              echo "PR already exists for $branch"
+            fi
+          done
