@@ -83,12 +83,21 @@ export function StacksProvider({ children }: { children: ReactNode }) {
         });
 
         // Sync session
+        console.log("Checking session status...");
         if (session.isUserSignedIn()) {
-          setUserData(session.loadUserData());
+          const data = session.loadUserData();
+          console.log("User already signed in:", data.profile?.stxAddress?.mainnet);
+          setUserData(data);
         } else if (session.isSignInPending()) {
-          session.handlePendingSignIn().then((data) => {
+          console.log("Sign-in pending, handling...");
+          try {
+            const data = await session.handlePendingSignIn();
+            console.log("Sign-in successful after redirect:", data.profile?.stxAddress?.mainnet);
             setUserData(data);
-          });
+            window.history.replaceState({}, document.title, window.location.pathname);
+          } catch (error) {
+            console.error("Failed to handle pending sign-in:", error);
+          }
         }
       } catch (e) {
         console.error("SDK Initialization failed:", e);
@@ -104,29 +113,80 @@ export function StacksProvider({ children }: { children: ReactNode }) {
 
   const connectWallet = async () => {
     if (typeof window === 'undefined') return;
+    
+    console.log("Initiating wallet connection...");
+
+    // First Priority: Try standard Stacks Connect if available
+    if (sdks?.connect && sdks?.session) {
+      console.log("Using Stacks Connect showConnect");
+      sdks.connect.showConnect({
+        appDetails: {
+          name: 'Bitcoin-Native & Stacks-Aligned',
+          icon: window.location.origin + '/favicon.ico',
+        },
+        userSession: sdks.session,
+        onFinish: () => {
+          console.log("showConnect onFinish triggered");
+          // Multi-stage sync to handle immediate state transition + persistence
+          setTimeout(() => {
+            if (sdks.session.isUserSignedIn()) {
+              const data = sdks.session.loadUserData();
+              console.log("Session verified, address:", data.profile?.stxAddress?.mainnet);
+              setUserData(data);
+              // Small delay before reload to ensure user sees the "Connected" state (if transition is smooth)
+              // or just reload immediately if that's more reliable.
+              window.location.reload();
+            } else {
+              console.warn("onFinish called but session.isUserSignedIn() is false. Retrying sync...");
+              // Fallback sync attempt
+              const data = sdks.session.loadUserData();
+              if (data) {
+                setUserData(data);
+                window.location.reload();
+              }
+            }
+          }, 300);
+        },
+        onCancel: () => {
+          console.log("Connection cancelled by user");
+        }
+      });
+      return;
+    }
+
+    // Fallback: Use the custom SDK (e.g. for WalletConnect or special providers)
+    console.log("Falling back to custom SDK connection");
     try {
       const { wallet } = await import("@earnwithalee/stacksrank-sdk");
       const address = await wallet.connectWallet();
+      console.log("Custom SDK connection returned address:", address);
+      
       if (address) {
-        // Sync with existing Connect session if needed, but SDK handles basic connection
-        // For compatibility with rest of app, we still use Connect session if possible
-        if (sdks?.session) {
-           // Reloading as the SDK might use its own internal state management
-           window.location.reload();
-        }
+        const manualUserData = {
+          profile: {
+            stxAddress: {
+              mainnet: address,
+              testnet: address
+            }
+          }
+        };
+        setUserData(manualUserData);
+        console.log("Manual user data set for UI compatibility");
       }
     } catch (e) {
-      console.error("Connection failed:", e);
+      console.error("Custom SDK Connection failed:", e);
     }
   };
 
 
   const disconnectWallet = () => {
+    setUserData(null);
     if (sdks?.session) {
       sdks.session.signUserOut();
-      setUserData(null);
-      window.location.reload();
     }
+    // Instead of full reload, just clear state. 
+    // If needed, we can reload, but let's try to be smoother.
+    // window.location.reload();
   };
 
   const doCheckIn = async () => {
