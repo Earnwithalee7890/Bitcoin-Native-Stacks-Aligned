@@ -1,0 +1,41 @@
+{
+  "name": "bitcoin-native-alee",
+  "version": "1.0.0",
+  "description": "Bitcoin-native utilities for Stacks blockchain development — address validation, STX/BTC conversion, contract helpers, and on-chain identity tools.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "bitcoin",
+    "stacks",
+    "bitcoin-native",
+    "stx",
+    "btc",
+    "blockchain",
+    "web3",
+    "clarity",
+    "smart-contracts",
+    "talent-protocol",
+    "defi",
+    "wallet",
+    "hiro",
+    "layer2",
+    "l2"
+  ],
+  "author": "earnwithalee",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Earnwithalee7890/Bitcoin-Native-Stacks-Aligned"
+  },
+  "homepage": "https://github.com/Earnwithalee7890/Bitcoin-Native-Stacks-Aligned#readme",
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

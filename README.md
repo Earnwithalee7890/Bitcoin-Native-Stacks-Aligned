@@ -73,5 +73,14 @@ This project is actively synced with Talent Protocol to track builder reputation
 ---
 *Built with ❤️ for the Stacks Community.*
 
+## 📦 NPM Package
+This project includes the published NPM package: **[bitcoin-native-alee](https://www.npmjs.com/package/bitcoin-native-alee)**.
+It provides Bitcoin-native utilities for Stacks blockchain development, including address validation, STX/BTC conversion, contract helpers, and on-chain identity tools.
+
+To install:
+```bash
+npm install bitcoin-native-alee
+```
+
 ## Architecture
 Uses Next.js App Router and Stacks.js.
