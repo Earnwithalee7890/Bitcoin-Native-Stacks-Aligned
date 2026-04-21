@@ -1,6 +1,6 @@
 {
-  "name": "bitcoin-native-alee",
-  "version": "1.0.0",
+  "name": "@earnwithalee7890/bitcoin-native-alee",
+  "version": "1.0.1",
   "description": "Bitcoin-native utilities for Stacks blockchain development — address validation, STX/BTC conversion, contract helpers, and on-chain identity tools.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -37,5 +37,8 @@
   "homepage": "https://github.com/Earnwithalee7890/Bitcoin-Native-Stacks-Aligned#readme",
   "devDependencies": {
     "typescript": "^5.0.0"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
   }
 }
