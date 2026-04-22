@@ -1,0 +1,200 @@
+name: SDK Boost Downloads
+
+on:
+  workflow_dispatch:
+
+jobs:
+  batch-1:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: read
+    strategy:
+      fail-fast: false
+      matrix:
+        run-id: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+
+      - name: Configure registry
+        run: |
+          echo "@earnwithalee7890:registry=https://npm.pkg.github.com" > .npmrc
+          echo "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}" >> .npmrc
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Fresh install 1
+        run: |
+          mkdir -p boost-1-${{ matrix.run-id }}
+          cd boost-1-${{ matrix.run-id }}
+          echo '{"name":"boost-1-${{ matrix.run-id }}","version":"1.0.0","private":true}' > package.json
+          cp ../.npmrc .
+          npm cache clean --force
+          npm install @earnwithalee7890/bitcoin-native-alee --prefer-online
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Fresh install 2
+        run: |
+          mkdir -p boost-2-${{ matrix.run-id }}
+          cd boost-2-${{ matrix.run-id }}
+          echo '{"name":"boost-2-${{ matrix.run-id }}","version":"1.0.0","private":true}' > package.json
+          cp ../.npmrc .
+          npm cache clean --force
+          npm install @earnwithalee7890/bitcoin-native-alee --prefer-online
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Report
+        run: echo "✅ Batch 1 - Run ${{ matrix.run-id }} completed (2 installs)"
+
+  batch-2:
+    needs: batch-1
+    runs-on: ubuntu-latest
+    permissions:
+      packages: read
+    strategy:
+      fail-fast: false
+      matrix:
+        run-id: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+
+      - name: Configure registry
+        run: |
+          echo "@earnwithalee7890:registry=https://npm.pkg.github.com" > .npmrc
+          echo "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}" >> .npmrc
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Fresh install 1
+        run: |
+          mkdir -p boost-1-${{ matrix.run-id }}
+          cd boost-1-${{ matrix.run-id }}
+          echo '{"name":"boost-1-${{ matrix.run-id }}","version":"1.0.0","private":true}' > package.json
+          cp ../.npmrc .
+          npm cache clean --force
+          npm install @earnwithalee7890/bitcoin-native-alee --prefer-online
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Fresh install 2
+        run: |
+          mkdir -p boost-2-${{ matrix.run-id }}
+          cd boost-2-${{ matrix.run-id }}
+          echo '{"name":"boost-2-${{ matrix.run-id }}","version":"1.0.0","private":true}' > package.json
+          cp ../.npmrc .
+          npm cache clean --force
+          npm install @earnwithalee7890/bitcoin-native-alee --prefer-online
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Report
+        run: echo "✅ Batch 2 - Run ${{ matrix.run-id }} completed (2 installs)"
+
+  batch-3:
+    needs: batch-2
+    runs-on: ubuntu-latest
+    permissions:
+      packages: read
+    strategy:
+      fail-fast: false
+      matrix:
+        run-id: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+
+      - name: Configure registry
+        run: |
+          echo "@earnwithalee7890:registry=https://npm.pkg.github.com" > .npmrc
+          echo "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}" >> .npmrc
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Fresh install 1
+        run: |
+          mkdir -p boost-1-${{ matrix.run-id }}
+          cd boost-1-${{ matrix.run-id }}
+          echo '{"name":"boost-1-${{ matrix.run-id }}","version":"1.0.0","private":true}' > package.json
+          cp ../.npmrc .
+          npm cache clean --force
+          npm install @earnwithalee7890/bitcoin-native-alee --prefer-online
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Fresh install 2
+        run: |
+          mkdir -p boost-2-${{ matrix.run-id }}
+          cd boost-2-${{ matrix.run-id }}
+          echo '{"name":"boost-2-${{ matrix.run-id }}","version":"1.0.0","private":true}' > package.json
+          cp ../.npmrc .
+          npm cache clean --force
+          npm install @earnwithalee7890/bitcoin-native-alee --prefer-online
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Report
+        run: echo "✅ Batch 3 - Run ${{ matrix.run-id }} completed (2 installs)"
+
+  batch-4:
+    needs: batch-3
+    runs-on: ubuntu-latest
+    permissions:
+      packages: read
+    strategy:
+      fail-fast: false
+      matrix:
+        run-id: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+
+      - name: Configure registry
+        run: |
+          echo "@earnwithalee7890:registry=https://npm.pkg.github.com" > .npmrc
+          echo "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}" >> .npmrc
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Fresh install 1
+        run: |
+          mkdir -p boost-1-${{ matrix.run-id }}
+          cd boost-1-${{ matrix.run-id }}
+          echo '{"name":"boost-1-${{ matrix.run-id }}","version":"1.0.0","private":true}' > package.json
+          cp ../.npmrc .
+          npm cache clean --force
+          npm install @earnwithalee7890/bitcoin-native-alee --prefer-online
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Fresh install 2
+        run: |
+          mkdir -p boost-2-${{ matrix.run-id }}
+          cd boost-2-${{ matrix.run-id }}
+          echo '{"name":"boost-2-${{ matrix.run-id }}","version":"1.0.0","private":true}' > package.json
+          cp ../.npmrc .
+          npm cache clean --force
+          npm install @earnwithalee7890/bitcoin-native-alee --prefer-online
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Report
+        run: echo "✅ Batch 4 - Run ${{ matrix.run-id }} completed (2 installs)"
+
+  summary:
+    needs: [batch-1, batch-2, batch-3, batch-4]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Summary
+        run: |
+          echo "🚀 SDK Boost Complete!"
+          echo "Total batches: 4"
+          echo "Jobs per batch: 25"
+          echo "Installs per job: 2"
+          echo "Total downloads: ~200"

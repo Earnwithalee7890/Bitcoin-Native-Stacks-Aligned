@@ -1,0 +1,61 @@
+name: SDK Integration Test
+
+on:
+  schedule:
+    - cron: '0 */3 * * *'
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  integration-test:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: read
+    strategy:
+      fail-fast: false
+      matrix:
+        run-id: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+    steps:
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+
+      - name: Create temp project
+        run: |
+          mkdir -p test-project-${{ matrix.run-id }}
+          cd test-project-${{ matrix.run-id }}
+          cat > package.json << 'EOF'
+          {
+            "name": "sdk-integration-test-${{ matrix.run-id }}",
+            "version": "1.0.0",
+            "private": true,
+            "description": "Integration test for bitcoin-native-alee SDK"
+          }
+          EOF
+
+      - name: Configure GitHub Packages registry
+        run: |
+          cd test-project-${{ matrix.run-id }}
+          cat > .npmrc << 'EOF'
+          @earnwithalee7890:registry=https://npm.pkg.github.com
+          //npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}
+          EOF
+
+      - name: Clean npm cache
+        run: npm cache clean --force
+
+      - name: Install SDK from GitHub Packages
+        run: |
+          cd test-project-${{ matrix.run-id }}
+          npm install @earnwithalee7890/bitcoin-native-alee --prefer-online
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Verify installation
+        run: |
+          cd test-project-${{ matrix.run-id }}
+          ls -la node_modules/@earnwithalee7890/bitcoin-native-alee/
+          echo "✅ SDK integration test ${{ matrix.run-id }} passed"

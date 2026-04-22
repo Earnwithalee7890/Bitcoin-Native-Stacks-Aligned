@@ -1,0 +1,50 @@
+name: Publish to GitHub Packages
+
+on:
+  release:
+    types: [published]
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@earnwithalee7890'
+
+      - name: Configure package for GitHub Packages
+        working-directory: ./packages/bitcoin-native
+        run: |
+          node -e "
+            const fs = require('fs');
+            const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+            pkg.name = '@earnwithalee7890/bitcoin-native-alee';
+            pkg.publishConfig = { registry: 'https://npm.pkg.github.com' };
+            fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2));
+            console.log('Updated package.json:', JSON.stringify(pkg, null, 2));
+          "
+
+      - name: Install dependencies
+        working-directory: ./packages/bitcoin-native
+        run: npm install
+
+      - name: Build package
+        working-directory: ./packages/bitcoin-native
+        run: npm run build --if-present
+
+      - name: Publish to GitHub Packages
+        working-directory: ./packages/bitcoin-native
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
