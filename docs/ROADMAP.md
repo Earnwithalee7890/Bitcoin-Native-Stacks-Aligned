@@ -30,3 +30,12 @@ Updated iteration 19
 
 Please follow the style guide.
 Updated iteration 20
+
+
+## Tech Stack
+
+- React
+- TypeScript
+- Stacks.js
+- Clarity 4
+Updated iteration 30
