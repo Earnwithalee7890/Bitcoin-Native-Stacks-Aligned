@@ -25,3 +25,10 @@ Updated iteration 10
 
 Run `npm install` to get started.
 Updated iteration 11
+
+
+## Roadmap
+
+- [x] Initial setup
+- [ ] Talent integration
+Updated iteration 40
