@@ -17,19 +17,12 @@ jobs:
         with:
           node-version: '20.x'
 
-      - name: Configure registry
-        run: |
-          echo "@earnwithalee7890:registry=https://npm.pkg.github.com" > .npmrc
-          echo "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}" >> .npmrc
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Fresh install 1
         run: |
           mkdir -p boost-1-${{ matrix.run-id }}
           cd boost-1-${{ matrix.run-id }}
           echo '{"name":"boost-1-${{ matrix.run-id }}","version":"1.0.0","private":true}' > package.json
-          cp ../.npmrc .
           npm cache clean --force
           npm install @earnwithalee7890/bitcoin-native-alee --prefer-online
         env:
@@ -40,7 +33,6 @@ jobs:
           mkdir -p boost-2-${{ matrix.run-id }}
           cd boost-2-${{ matrix.run-id }}
           echo '{"name":"boost-2-${{ matrix.run-id }}","version":"1.0.0","private":true}' > package.json
-          cp ../.npmrc .
           npm cache clean --force
           npm install @earnwithalee7890/bitcoin-native-alee --prefer-online
         env:
@@ -63,12 +55,6 @@ jobs:
         with:
           node-version: '20.x'
 
-      - name: Configure registry
-        run: |
-          echo "@earnwithalee7890:registry=https://npm.pkg.github.com" > .npmrc
-          echo "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}" >> .npmrc
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Fresh install 1
         run: |
@@ -109,12 +95,6 @@ jobs:
         with:
           node-version: '20.x'
 
-      - name: Configure registry
-        run: |
-          echo "@earnwithalee7890:registry=https://npm.pkg.github.com" > .npmrc
-          echo "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}" >> .npmrc
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Fresh install 1
         run: |
@@ -155,12 +135,6 @@ jobs:
         with:
           node-version: '20.x'
 
-      - name: Configure registry
-        run: |
-          echo "@earnwithalee7890:registry=https://npm.pkg.github.com" > .npmrc
-          echo "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}" >> .npmrc
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Fresh install 1
         run: |

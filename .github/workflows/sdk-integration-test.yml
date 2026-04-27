@@ -36,13 +36,7 @@ jobs:
           }
           EOF
 
-      - name: Configure GitHub Packages registry
-        run: |
-          cd test-project-${{ matrix.run-id }}
-          cat > .npmrc << 'EOF'
-          @earnwithalee7890:registry=https://npm.pkg.github.com
-          //npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}
-          EOF
+
 
       - name: Clean npm cache
         run: npm cache clean --force
