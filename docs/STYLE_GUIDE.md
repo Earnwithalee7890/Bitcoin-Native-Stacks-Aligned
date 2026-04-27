@@ -40,3 +40,9 @@ Updated iteration 47
 
 This project aligns Bitcoin and Stacks.
 Updated iteration 48
+
+
+## Contributing
+
+Please follow the style guide.
+Updated iteration 53
