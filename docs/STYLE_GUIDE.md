@@ -34,3 +34,9 @@ Updated iteration 36
 
 Report vulnerabilities to security@example.com
 Updated iteration 47
+
+
+# Project Overview
+
+This project aligns Bitcoin and Stacks.
+Updated iteration 48
