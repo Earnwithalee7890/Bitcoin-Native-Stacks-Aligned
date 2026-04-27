@@ -58,3 +58,9 @@ Updated iteration 34
 
 Run `npm test` for unit tests.
 Updated iteration 35
+
+
+## Contributing
+
+Please follow the style guide.
+Updated iteration 37
