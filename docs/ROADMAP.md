@@ -10,3 +10,10 @@ Updated iteration 5
 
 Run `npm test` for unit tests.
 Updated iteration 12
+
+
+## Roadmap
+
+- [x] Initial setup
+- [ ] Talent integration
+Updated iteration 17
