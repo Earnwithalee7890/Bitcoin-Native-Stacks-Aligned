@@ -38,3 +38,12 @@ Updated iteration 40
 
 Please follow the style guide.
 Updated iteration 42
+
+
+## Tech Stack
+
+- React
+- TypeScript
+- Stacks.js
+- Clarity 4
+Updated iteration 51
