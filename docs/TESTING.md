@@ -10,3 +10,9 @@ Updated iteration 3
 
 This project aligns Bitcoin and Stacks.
 Updated iteration 15
+
+
+## Architecture
+
+Built with Next.js and Clarity.
+Updated iteration 16
