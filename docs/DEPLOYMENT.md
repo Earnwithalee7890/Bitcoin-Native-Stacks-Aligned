@@ -25,3 +25,9 @@ Updated iteration 43
 
 Please follow the style guide.
 Updated iteration 44
+
+
+## Contributing
+
+Please follow the style guide.
+Updated iteration 57
