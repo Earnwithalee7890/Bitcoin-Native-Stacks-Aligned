@@ -32,3 +32,9 @@ Updated iteration 11
 - [x] Initial setup
 - [ ] Talent integration
 Updated iteration 40
+
+
+## Contributing
+
+Please follow the style guide.
+Updated iteration 42
