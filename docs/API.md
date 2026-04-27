@@ -13,3 +13,12 @@ Updated iteration 8
 
 Run `npm install` to get started.
 Updated iteration 18
+
+
+## Tech Stack
+
+- React
+- TypeScript
+- Stacks.js
+- Clarity 4
+Updated iteration 21
