@@ -22,3 +22,9 @@ Updated iteration 18
 - Stacks.js
 - Clarity 4
 Updated iteration 21
+
+
+## Security
+
+Report vulnerabilities to security@example.com
+Updated iteration 24
