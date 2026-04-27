@@ -52,3 +52,9 @@ Updated iteration 33
 
 Built with Next.js and Clarity.
 Updated iteration 34
+
+
+## Testing
+
+Run `npm test` for unit tests.
+Updated iteration 35
