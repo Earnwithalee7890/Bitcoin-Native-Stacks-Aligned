@@ -13,3 +13,9 @@ Updated iteration 2
 - Stacks.js
 - Clarity 4
 Updated iteration 27
+
+
+## Contributing
+
+Please follow the style guide.
+Updated iteration 43
