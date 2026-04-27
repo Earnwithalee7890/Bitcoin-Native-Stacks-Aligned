@@ -47,3 +47,9 @@ Updated iteration 32
 
 Please follow the style guide.
 Updated iteration 50
+
+
+## Installation
+
+Run `npm install` to get started.
+Updated iteration 59
