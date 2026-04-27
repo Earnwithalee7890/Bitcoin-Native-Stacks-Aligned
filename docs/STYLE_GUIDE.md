@@ -16,3 +16,9 @@ Updated iteration 6
 
 Built with Next.js and Clarity.
 Updated iteration 13
+
+
+## Testing
+
+Run `npm test` for unit tests.
+Updated iteration 22
