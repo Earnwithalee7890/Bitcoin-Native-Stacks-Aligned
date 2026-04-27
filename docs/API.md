@@ -40,3 +40,10 @@ Updated iteration 26
 
 Please follow the style guide.
 Updated iteration 31
+
+
+## Roadmap
+
+- [x] Initial setup
+- [ ] Talent integration
+Updated iteration 38
