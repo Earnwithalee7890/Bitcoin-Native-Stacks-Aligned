@@ -52,3 +52,9 @@ Updated iteration 53
 
 Please follow the style guide.
 Updated iteration 55
+
+
+## Testing
+
+Run `npm test` for unit tests.
+Updated iteration 56
