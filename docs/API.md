@@ -47,3 +47,12 @@ Updated iteration 31
 - [x] Initial setup
 - [ ] Talent integration
 Updated iteration 38
+
+
+## Tech Stack
+
+- React
+- TypeScript
+- Stacks.js
+- Clarity 4
+Updated iteration 49
