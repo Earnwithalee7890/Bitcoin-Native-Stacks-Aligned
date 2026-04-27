@@ -13,3 +13,9 @@ Updated iteration 0
 
 Built with Next.js and Clarity.
 Updated iteration 7
+
+
+## Architecture
+
+Built with Next.js and Clarity.
+Updated iteration 10
