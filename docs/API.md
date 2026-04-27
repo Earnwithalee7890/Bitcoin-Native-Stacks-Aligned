@@ -28,3 +28,9 @@ Updated iteration 21
 
 Report vulnerabilities to security@example.com
 Updated iteration 24
+
+
+## Installation
+
+Run `npm install` to get started.
+Updated iteration 26
