@@ -29,3 +29,9 @@ Updated iteration 23
 - [x] Initial setup
 - [ ] Talent integration
 Updated iteration 28
+
+
+## Testing
+
+Run `npm test` for unit tests.
+Updated iteration 29
