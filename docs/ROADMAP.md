@@ -46,3 +46,9 @@ Updated iteration 30
 - [x] Initial setup
 - [ ] Talent integration
 Updated iteration 33
+
+
+## Architecture
+
+Built with Next.js and Clarity.
+Updated iteration 34
