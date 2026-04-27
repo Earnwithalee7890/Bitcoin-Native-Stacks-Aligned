@@ -17,3 +17,10 @@ Updated iteration 12
 - [x] Initial setup
 - [ ] Talent integration
 Updated iteration 17
+
+
+## Roadmap
+
+- [x] Initial setup
+- [ ] Talent integration
+Updated iteration 19
