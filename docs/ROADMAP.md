@@ -83,3 +83,9 @@ Updated iteration 45
 
 Report vulnerabilities to security@example.com
 Updated iteration 46
+
+
+## Testing
+
+Run `npm test` for unit tests.
+Updated iteration 54
