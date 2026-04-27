@@ -34,3 +34,9 @@ Updated iteration 24
 
 Run `npm install` to get started.
 Updated iteration 26
+
+
+## Contributing
+
+Please follow the style guide.
+Updated iteration 31
