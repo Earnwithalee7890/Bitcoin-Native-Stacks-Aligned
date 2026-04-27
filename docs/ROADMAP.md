@@ -39,3 +39,10 @@ Updated iteration 20
 - Stacks.js
 - Clarity 4
 Updated iteration 30
+
+
+## Roadmap
+
+- [x] Initial setup
+- [ ] Talent integration
+Updated iteration 33
