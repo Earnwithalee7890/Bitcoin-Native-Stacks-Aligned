@@ -28,3 +28,9 @@ Updated iteration 22
 
 Please follow the style guide.
 Updated iteration 36
+
+
+## Security
+
+Report vulnerabilities to security@example.com
+Updated iteration 47
