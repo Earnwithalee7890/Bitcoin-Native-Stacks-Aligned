@@ -71,3 +71,9 @@ Updated iteration 37
 - [x] Initial setup
 - [ ] Talent integration
 Updated iteration 41
+
+
+## Testing
+
+Run `npm test` for unit tests.
+Updated iteration 45
